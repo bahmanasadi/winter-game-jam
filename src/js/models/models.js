@@ -1,32 +1,42 @@
-"use strict";
+/* jshint node: true */
+'use strict';
 
-if (!gc) {
-	window.gc = {};
-}
+var Backbone = require('backbone');
 
-gc.models = (function () {
+var Game = Backbone.Model.extend({
+	timeLeft: 0,
+	player: undefined,
+	scene: undefined,
+	obstacles: [],
 
-	var Game = Backbone.Model.extend({
-		timeLeft: 0,
-		player: undefined,
-		scene: undefined,
-		obstacles: [],
+	initialize: function() {
 
-		initialize: function() {
-		}
+	},
+	setup: function () {
+		var canvas = document.createElement('canvas');
+		canvas.width = this.get('width');
+		canvas.height = this.get('height');
+		document.body.appendChild(canvas);
+		this.ctx = canvas.getContext('2d');
+		//canvas.onclick = click;
+	},
+	pause: function () {
 
-	});
+	},
+	menu: function () {
+		
+	}
 
-	var Player = Backbone.Model.extend({
-		entity: undefined,
+});
 
-		initialize: function() {
-		}
-	});
+var Player = Backbone.Model.extend({
+	entity: undefined,
 
-	return {
-		Game		: Game,
-		Player 		: Player
-	};
+	initialize: function() {
+	}
+});
 
-}) ();
+module.exports = {
+	Game		: Game,
+	Player 		: Player
+};
