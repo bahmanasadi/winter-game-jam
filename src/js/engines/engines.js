@@ -55,7 +55,9 @@ var Sprite = Backbone.Model.extend({
 	url: undefined,
 	animation : undefined,
 	text: "",
-
+	width: 0,
+	height: 0,
+	
 	initialize: function (options) {
 		this.url = options.url;
 	},
