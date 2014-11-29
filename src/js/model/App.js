@@ -15,11 +15,16 @@ _.extend(App.prototype, {
 		var that = this;
 		console.log('setup');
 		var canvas = document.createElement('canvas');
-		canvas.width = this.width;
-		canvas.height = this.height;
 		document.body.appendChild(canvas);
+
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+		
 		this.context = canvas.getContext('2d');
 		this.context.imageSmoothingEnabled = false;
+		
+		this.context.scaleFactor = canvas.width / 256;
+		
 		//canvas.onclick = click;
 
 		return resources.load([

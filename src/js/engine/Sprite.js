@@ -17,7 +17,6 @@ _.extend(Sprite.prototype, {
 	text: '',
 	render: function (context, pos) {
 		if (this.image) {
-			console.log('img')
 			if (pos.crop) {
 				context.drawImage(this.image, 
 					pos.crop.x, pos.crop.y, pos.crop.width, pos.crop.height,
