@@ -1,11 +1,13 @@
+/* jshint node: true */
 'use strict';
 
-var Backbone = require('backbone');
-
+var Backbone = require('backbone'),
+	resources = require('../resources.js');
 
 
 var Scene = Backbone.Model.extend({
 	layers: [],
+	entities: [],
 
 	initialize: function() {
 	}
@@ -40,8 +42,14 @@ var Sprite = Backbone.Model.extend({
 	animation : undefined,
 	text: "",
 
-	initialize: function () {
-
+	initialize: function (options) {
+		this.url = options.url;
+	},
+	load: function () {
+		var that = this;
+		return resources.get(this.url).then(function (image) {
+			that.image = image;
+		});
 	}
 });
 
@@ -78,6 +86,9 @@ var UIScreen = Backbone.Model.extend({
 	entities: undefined,
 
 	initialize: function() {
+	},
+	draw: function () {
+
 	}
 	
 });

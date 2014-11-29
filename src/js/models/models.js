@@ -2,35 +2,9 @@
 'use strict';
 
 var Backbone = require('backbone'),
+	_ = require('lodash'),
 	BBPromise = require('bluebird'),
 	engines = require('../engines/engines.js');
-
-var resources = {
-	_cache: {},
-	// Load an image url or an array of image urls
-	get: function (url) {
-		if (url instanceof Array) {
-			return BBPromise.all(url.map(resources.load));
-		}
-
-		return new BBPromise(function (resolve, reject) {
-			if (resources._cache[url]) {
-				resolve(resources._cache[url]);
-			} else {
-				var img = new Image();
-				img.onload = function () {
-					resources._cache[url] = img;
-					resolve(img);
-				};
-				img.onerror = function () {
-					reject();
-				};
-				img.src = url;
-			}
-		});
-    }
-};
-
 
 var App = Backbone.Model.extend({
 	ui: undefined,
@@ -49,15 +23,16 @@ var App = Backbone.Model.extend({
 		//canvas.onclick = click;
 
 		this.sprites = {
-			sIdle: engines.Sprite({
+			sIdle: new engines.Sprite({
 				type: 'image',
 				url: 'img/sprites/s_idle.png'
 			})
 		};
 
-		BBPromise.all(this.sprites.map(function (sprite) { 
+		BBPromise.all(_(this.sprites).map(function (sprite) { 
 			return sprite.load();
 		})).then(function () {
+			console.log('loaded sprites');
 			that.render();
 		});	
 	},
@@ -71,7 +46,7 @@ var App = Backbone.Model.extend({
 		var gameUI = new engines.UIScreen(),
 			scene = new engines.Scene(),
 			ePlayer = new engines.Entity({
-				sprite: sprites.sIdle,
+				sprite: this.sprites.sIdle,
 				position: { x: 0, y: 0 },
 				scale: { x: 0.2, y: 0.2 }
 			}),
