@@ -22,6 +22,7 @@ _.extend(Sprite.prototype, {
 					pos.crop.x, pos.crop.y, pos.crop.width, pos.crop.height,
 					pos.x, pos.y, pos.width, pos.height);
 			} else {
+				console.log('k',pos.x, pos.y);
 				context.drawImage(this.image, pos.x, pos.y, pos.width, pos.height);
 			}
 		}
