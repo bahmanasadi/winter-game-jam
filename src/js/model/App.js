@@ -23,7 +23,9 @@ _.extend(App.prototype, {
 		this.context = canvas.getContext('2d');
 		this.context.imageSmoothingEnabled = false;
 
-		this.context.scaleFactor = canvas.width / this.width;
+		var scaleFactor = canvas.width / this.width;
+		this.context.scaleFactor = scaleFactor;
+		this.context.marginTop = (canvas.height - (scaleFactor * this.height)) / 2;
 		
 		canvas.onclick = function (e) {
 			if (that.viewport) { that.viewport.click(e.x, e.y); }
@@ -33,7 +35,12 @@ _.extend(App.prototype, {
 			'img/sprites/s_idle.png',
 			'img/sprites/s_run.png',
 			'img/sprites/house1.png',
-			'img/sprites/cloud1.png'
+			'img/sprites/cloud1.png',
+			'img/sprites/building-blue-roof-plaster-left.png',
+			'img/sprites/building-blue-roof-plaster-mid.png',
+			'img/sprites/building-blue-roof-plaster-mid-dormer.png',
+			'img/sprites/building-blue-roof-plaster-mid-window.png',
+			'img/sprites/building-blue-roof-plaster-right.png'
 		]).then(function () {
 			console.log('loaded resources');
 			that.render();
@@ -61,6 +68,9 @@ _.extend(App.prototype, {
 			timeDiff = (time - this._lastTime) / 1000;
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		if (this.viewport) { this.viewport.render(timeDiff, this.context); }
+		this.context.fillStyle = 'black';
+		this.context.fillRect(0, 0, this.canvas.width, this.context.marginTop + 1);
+		this.context.fillRect(0, this.canvas.height - this.context.marginTop - 1, this.canvas.width, this.context.marginTop + 2);
 		this._lastTime = time;
 		requestAnimationFrame(function () { that.render(); });
 	}
