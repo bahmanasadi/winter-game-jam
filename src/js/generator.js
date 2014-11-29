@@ -3,7 +3,7 @@
 var _ = require('lodash'),
 	Entity = require('./engine/Entity.js');
 
-var GenerateEntity = function (sprites, width) {
+var GenerateEntity = function (sprites, width, height) {
 	var objects = [],
 		i = 0;
 
@@ -14,7 +14,7 @@ var GenerateEntity = function (sprites, width) {
 			var sprite = sprites[Math.floor((Math.random() * sprites.length))];
 			objects.push(new Entity({
 				sprite: 	sprite,
-				position: 	{ x: i, y: 22 },
+				position: 	{ x: i, y: height ? Math.random() * height : 22 },
 				size: 		{ x: sprite.image.width, y: sprite.image.height }
 			}));
 			i += sprite.image.width;
@@ -53,9 +53,8 @@ var DetectCollision = function (entity, entities) {
 		var otherStartY = otherEntity.position.y - (otherEntity.size.y/2);
 		var otherEndY = otherStartY + otherEntity.size.y;
 		// TODO Check for height
-		if ( (startX > otherStartX && startX < otherEndX)
-			 || (endX > otherStartX && endX < otherEndX)
-			 || (startY >= otherStartY && startY <= otherEndY) ) {
+		if ( ((startX > otherStartX && startX < otherEndX) || (endX > otherStartX && endX < otherEndX))
+			 && (startY >= otherStartY && startY <= otherEndY) ) {
 			return otherEntity;
 		}
 	}

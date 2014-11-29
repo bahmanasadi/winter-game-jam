@@ -27,10 +27,10 @@ _.extend(Entity.prototype, {
 	absolute: function (context) {
 		var sf = context.scaleFactor;
 		return {
-			x: Math.ceil((this.position.x + this.layer.position.x - this.size.x / 2) * sf),
-			y: Math.ceil((160 - this.position.y + this.layer.position.y - this.size.y / 2) * sf),
-			width: Math.ceil(this.size.x * sf), 
-			height: Math.ceil(this.size.y * sf)
+			x: Math.round((this.position.x + this.layer.position.x - this.size.x / 2)) * sf,
+			y: Math.round((160 - this.position.y + this.layer.position.y - this.size.y / 2)) * sf,
+			width: Math.round(this.size.x) * sf, 
+			height: Math.round(this.size.y) * sf
 		};
 	}
 });

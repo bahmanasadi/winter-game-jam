@@ -7,17 +7,27 @@ var _ = require('lodash'),
 
 var ImageSprite = function () {
 	Sprite.apply(this, arguments);
-	console.log(this.url);
+	var that = this;
 	this.image = resources.get(this.url);
+	if (this.animate) {
+		this.frameCount = Math.floor(this.image.width / this.animate.slice.x);
+		this.currentFrame = 0;
+		setInterval(function () {
+			that.currentFrame++;
+			if (that.currentFrame === that.frameCount) {
+				that.currentFrame = 0;
+			}
+		}, (1 / this.animate.speed) * 1000);
+	}
 };
 
 _.extend(ImageSprite.prototype, Sprite.prototype, {
 	url: undefined,
 	animation : undefined,
 	render: function (context, pos) {
-		if (pos.crop) {
+		if (this.animate) {
 			context.drawImage(this.image, 
-				pos.crop.x, pos.crop.y, pos.crop.width, pos.crop.height,
+				this.currentFrame * this.animate.slice.x, 0, this.animate.slice.x, this.animate.slice.y,
 				pos.x, pos.y, pos.width, pos.height);
 		} else {
 			context.drawImage(this.image, pos.x, pos.y, pos.width, pos.height);
