@@ -14,7 +14,7 @@ _.extend(App.prototype, {
 	setup: function () {
 		var that = this;
 		console.log('setup');
-		var canvas = document.createElement('canvas');
+		var canvas = this.canvas = document.createElement('canvas');
 		document.body.appendChild(canvas);
 
 		canvas.width = window.innerWidth;
@@ -23,7 +23,7 @@ _.extend(App.prototype, {
 		this.context = canvas.getContext('2d');
 		this.context.imageSmoothingEnabled = false;
 
-		this.context.scaleFactor = canvas.width / 256;
+		this.context.scaleFactor = canvas.width / this.width;
 		
 		canvas.onclick = function (e) {
 			console.log('click', e);
@@ -54,10 +54,14 @@ _.extend(App.prototype, {
 		if (this.viewport) { this.viewport.destroy(); }
 		this.viewport = viewport;
 	},
+	_lastTime: Date.now(),
 	render: function () {
-		var that = this;
-		this.context.clearRect(0, 0, this.width, this.height);
-		if (this.viewport) { this.viewport.render(undefined, this.context); }
+		var that = this,
+			time = Date.now(),
+			timeDiff = (time - this._lastTime) / 1000;
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		if (this.viewport) { this.viewport.render(timeDiff, this.context); }
+		this._lastTime = time;
 		requestAnimationFrame(function () { that.render(); });
 	}
 });

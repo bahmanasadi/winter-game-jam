@@ -78,8 +78,9 @@ var GameViewport = function (attributes) {
 
 _.extend(GameViewport.prototype, Viewport.prototype, {
 	click: function () {
-		this.entities.player.velocity = { y: 5 };
-		this.entities.player.accelaration = { y: -1 };
+		console.log('jump!')
+		this.entities.player.velocity = { y: 150 };
+		this.entities.player.acceleration = { y: -300 };
 	}
 });
 
