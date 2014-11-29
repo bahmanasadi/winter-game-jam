@@ -11,9 +11,11 @@ var Entity = function (attributes) {
 		velocity: {x:0, y:0},
 		size: {x:0, y:0},
 		floorcollision: false,
+		type: undefined
 	}, attributes);
 };
 _.extend(Entity.prototype, {
+	types : {player:'player', other: 'other'},
 	render: function (time, context) {
 		var pos = this.absolute(context);
 		if (this.sprite) { this.sprite.render(context, pos); }

@@ -123,7 +123,8 @@ var GameViewport = function () {
 			size: { x: 18, y: 32 },
 			acceleration: { x: baseAcceleration, y: -300 },
 			velocity: { x: baseSpeed, y: 0 },
-			floorcollision: true
+			floorcollision: true,
+			type: Entity.prototype.types.player
 		}),
 		sky: new Entity({
 			sprite: sprites.sky,
@@ -183,9 +184,18 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 
 		var collidedEntity = utils.detectCollision(this.entities.player, this.layers[3].entities);
 		if (collidedEntity) {
-			this.entities.player.velocity.y = 0;
-			this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;
-			console.log('Collision Detected!!!!!! YOU LOST');
+			var playerY = Math.ceil(this.entities.player.position.y);
+			var collidedEntityY = collidedEntity.position.y + collidedEntity.size.y / 2.0 + this.entities.player.size.y / 2.0 ;
+			if (Math.abs(collidedEntityY - playerY)  > 5 ) {
+				this.entities.player.sprite = this.sprites.idle;
+				this.entities.player.velocity.y = -100;
+				this.entities.player.velocity.x = 0;
+				this.gameover = true;
+			} else {
+				this.entities.player.sprite = this.sprites.run;
+				this.entities.player.velocity.y = 0;
+				this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;				
+			}
 		}
 	}
 });

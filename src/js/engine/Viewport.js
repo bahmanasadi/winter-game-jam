@@ -10,11 +10,18 @@ var _ = require('lodash');
 var Viewport = function (attributes) {
 	_.extend(this, attributes);
 	this.layers = [];
+	this.pause = false;
+	this.gameover = false;
 };
 
 _.extend(Viewport.prototype, {
 	render: function (time, context) {
-		this.layers.forEach(function (layer) { layer.render(time, context); });
+		var that = this;
+		this.layers.forEach(function (layer) { 
+			layer.pause = that.pause;
+			layer.gameover = that.gameover;
+			layer.render(time, context); 
+		});
 	},
 	click: function () {}
 });
