@@ -37,7 +37,11 @@ var GameViewport = function () {
 	this.layers = [
 		new Layer(), // sky
 		new Layer(), // background -- landmarks
-		new Layer()  // foreground -- player + obstacles
+		new Layer({
+			position: { x: 0, y: 0 },
+			velocity: { x: -30 },
+			acceleration: { x: -10 }
+		})  // foreground -- player + obstacles
 	];
 
 
@@ -52,12 +56,6 @@ var GameViewport = function () {
 		position: {x: 25, y: 100},
 		size: {x: 50, y: 15}
 	});
-
-	var ePlayer = new Entity({
-		sprite: sprites.idle,
-		position: { x: 20, y: 20 },
-		size: { x: 18, y: 32 }
-	});
 	
 	// this.layers[2].entities.push(eCloud);
 	// this.layers[2].entities.push(eHouse);
@@ -66,7 +64,9 @@ var GameViewport = function () {
 		player: new Entity({
 			sprite: sprites.idle,
 			position: { x: 20, y: 20 },
-			size: { x: 18, y: 32 }
+			size: { x: 18, y: 32 },
+			velocity: { x: -this.layers[2].velocity.x },
+			acceleration: { x: -this.layers[2].acceleration.x },
 		}),
 		sky: new Entity({
 			sprite: sprites.sky,
@@ -75,13 +75,13 @@ var GameViewport = function () {
 		})
 	};
 	
-	this.layers[0].entities.push(this.entities.sky);
-	this.layers[2].entities.push(this.entities.player);
+	this.layers[0].add(this.entities.sky);
+	this.layers[2].add(this.entities.player);
 
 	var obstacles = Generator.GenerateEntity([sprites.house1, sprites.cloud1], 1000.0);
 	var that = this;
 	_.each(obstacles, function (entity) {
-		that.layers[2].entities.push(entity);
+		that.layers[2].add(entity);
 	});
 	console.log(obstacles);
 };
@@ -89,8 +89,8 @@ var GameViewport = function () {
 _.extend(GameViewport.prototype, Viewport.prototype, {
 	click: function () {
 		console.log('jump!');
-		this.entities.player.velocity = { y: 150 };
-		this.entities.player.acceleration = { y: -300 };
+		this.entities.player.velocity.y = 150;
+		this.entities.player.acceleration.y = -300;
 	}
 });
 
