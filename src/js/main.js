@@ -9,9 +9,10 @@ var $ = require('jquery'),
 require('requestanimationframe');
 
 
-var game = new models.Game({ width: 256, height: 160 });
+var app = new models.App({ width: 256, height: 160 });
 
 $(function () {
-	game.setup();
-	game.game();
+	console.log('ready')
+	app.setup();
+	app.game();
 });

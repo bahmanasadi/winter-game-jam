@@ -35,6 +35,8 @@ var resources = {
 var App = Backbone.Model.extend({
 	ui: undefined,
 	setup: function () {
+		var that = this;
+		console.log('setup');
 		var canvas = document.createElement('canvas');
 		canvas.width = this.get('width');
 		canvas.height = this.get('height');
@@ -52,7 +54,7 @@ var App = Backbone.Model.extend({
 		BBPromise.all(this.sprites.map(function (sprite) { 
 			return sprite.load();
 		})).then(function () {
-			this.render();
+			that.render();
 		});	
 	},
 	pause: function () {
@@ -110,5 +112,6 @@ var Player = Backbone.Model.extend({
 
 module.exports = {
 	Game		: Game,
-	Player 		: Player
+	Player 		: Player,
+	App : App
 };
