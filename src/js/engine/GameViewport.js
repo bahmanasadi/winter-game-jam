@@ -8,7 +8,8 @@ var _ = require('lodash'),
 	ImageSprite = require('../engine/ImageSprite.js'),
 	TextSprite = require('../engine/TextSprite.js'),
 	RectangleSprite = require('../engine/RectangleSprite.js'),
-	Generator = require('../generator.js');
+	Generator = require('../generator.js'),
+	BuildingGenerator = require('../engine/BuildingGenerator.js');
 
 // Instances
 // GameUI
@@ -49,7 +50,7 @@ var GameViewport = function () {
 	};
 
 	var baseSpeed = 30,
-		baseAccelaration = 10;
+		baseAcceleration = 10;
 	this.layers = [
 		new Layer({
 			position: { x: 0, y: 0 }
@@ -57,17 +58,17 @@ var GameViewport = function () {
 		new Layer({
 			position: { x: 0, y: 0 },
 			velocity: { x: -baseSpeed / 4 },
-			acceleration: { x: -baseAccelaration / 4 }
+			acceleration: { x: -baseAcceleration / 4 }
 		}), // clouds
 		new Layer({
 			position: { x: 0, y: 0 },
 			velocity: { x: -baseSpeed / 2 },
-			acceleration: { x: -baseAccelaration / 2 }
+			acceleration: { x: -baseAcceleration / 2 }
 		}), // background -- landmarks
 		new Layer({
 			position: { x: 0, y: 0 },
 			velocity: { x: -baseSpeed },
-			acceleration: { x: -baseAccelaration }
+			acceleration: { x: -baseAcceleration }
 		}), // foreground -- player + obstacles
 		new Layer({
 			position: { x: 0, y: 0 }
@@ -93,7 +94,7 @@ var GameViewport = function () {
 	this.entities = {
 		player: new Entity({
 			sprite: sprites.run,
-			position: { x: 20, y: 20 },
+			position: { x: 100, y: 20 },
 			size: { x: 18, y: 32 },
 			velocity: { x: -this.layers[3].velocity.x },
 			acceleration: { x: -this.layers[3].acceleration.x },
@@ -116,27 +117,39 @@ var GameViewport = function () {
 
 	var obstacles = Generator.GenerateEntity([sprites.house1], 1000.0);
 	_.each(obstacles, function (entity) {
-		that.layers[3].add(entity);
+		//that.layers[3].add(entity);
 	});
+	console.log(obstacles);
 
 	var clouds = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds, function (entity) {
-		// that.layers[2].add(entity);
+		//that.layers[2].add(entity);
 	});
 
 	var clouds2 = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds2, function (entity) {
-		// that.layers[1].add(entity);
+		//that.layers[1].add(entity);
 	});
 
 	that.layers[4].add(this.entities.timeLeft);
+
+	this.buildingGenerator = new BuildingGenerator({
+		size: { x: 256, y: 160 }
+		//velocity: { x: baseSpeed },
+		//acceleration: { x: baseAcceleration }
+	});
+	that.layers[3].add(this.buildingGenerator);
 };
+
 
 _.extend(GameViewport.prototype, Viewport.prototype, {
 	click: function () {
-		// console.log('jump!');
+		console.log('jump!');
 		this.entities.player.velocity.y = 150;
 		this.entities.player.acceleration.y = -300;
+	},
+	render: function () {
+		Viewport.prototype.render.apply(this, arguments);
 	}
 });
 
