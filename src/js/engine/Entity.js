@@ -29,10 +29,11 @@ _.extend(Entity.prototype, {
 		}
 	},
 	absolute: function (context) {
-		var sf = context.scaleFactor;
+		var sf = context.scaleFactor,
+			marginTop = context.marginTop;
 		return {
 			x: Math.round((this.position.x + this.layer.position.x - this.size.x / 2)) * sf,
-			y: Math.round((160 - this.position.y + this.layer.position.y - this.size.y / 2)) * sf,
+			y: marginTop + Math.round((160 - this.position.y + this.layer.position.y - this.size.y / 2)) * sf,
 			width: Math.round(this.size.x) * sf, 
 			height: Math.round(this.size.y) * sf
 		};
