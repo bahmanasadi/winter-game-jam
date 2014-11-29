@@ -13,7 +13,7 @@ var TextSprite = function () {
 _.extend(TextSprite.prototype, Sprite.prototype, {
 	text: '',
 	render: function (context, pos) {
-		context.font = '20px "Press Start 2P"';
+		context.font = (12 * context.scaleFactor) + 'px "Press Start 2P"';
 		context.fillStyle = this.fill;
 		context.textAlign = 'center'; 
 		context.fillText(this.text, pos.x, pos.y);
