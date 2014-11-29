@@ -9,7 +9,8 @@ var _ = require('lodash'),
 	TextSprite = require('../engine/TextSprite.js'),
 	RectangleSprite = require('../engine/RectangleSprite.js'),
 	Generator = require('../generator.js'),
-	BuildingGenerator = require('../engine/BuildingGenerator.js');
+	BuildingGenerator = require('../engine/BuildingGenerator.js'),
+	moment = require('moment');
 
 // Instances
 // GameUI
@@ -49,8 +50,23 @@ var GameViewport = function () {
 		//tumble: new Sprite({})
 	};
 
-	var baseSpeed = 30,
-		baseAcceleration = 10;
+	var pad = function (n, size) {
+		n = String(n).substr(0, size);
+		var i = 0, 
+			l = size - n.length;
+		for (; i < l; i++) {
+			n = '0' + n;
+		}
+		return n;
+	};
+	var startTime = Date.now();
+	setInterval(function () {
+		var duration = moment.duration(Date.now() - startTime, 'ms');
+		sprites.timeLeft.text = pad(duration.minutes(), 2) + ':' + pad(duration.seconds(), 2) + '.' + pad(duration.milliseconds(), 1);
+	}, 100);
+
+	var baseSpeed = 100,
+		baseAcceleration = 0.1;
 	this.layers = [
 		new Layer({
 			position: { x: 0, y: 0 }
@@ -94,10 +110,10 @@ var GameViewport = function () {
 	this.entities = {
 		player: new Entity({
 			sprite: sprites.run,
-			position: { x: 100, y: 20 },
+			position: { x: 100, y: 120 },
 			size: { x: 18, y: 32 },
+			acceleration: { x: -this.layers[3].acceleration.x, y: -300 },
 			velocity: { x: -this.layers[3].velocity.x },
-			acceleration: { x: -this.layers[3].acceleration.x },
 			floorcollision: true
 		}),
 		sky: new Entity({
@@ -146,7 +162,6 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 	click: function () {
 		console.log('jump!');
 		this.entities.player.velocity.y = 150;
-		this.entities.player.acceleration.y = -300;
 	},
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
