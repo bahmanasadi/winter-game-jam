@@ -13,5 +13,5 @@ var game = new models.Game({ width: 256, height: 160 });
 
 $(function () {
 	game.setup();
-	game.menu();
+	game.game();
 });
