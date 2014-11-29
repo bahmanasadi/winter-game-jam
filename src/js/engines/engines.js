@@ -6,10 +6,16 @@ var Backbone = require('backbone'),
 
 
 var Scene = Backbone.Model.extend({
-	layers: [],
-	entities: [],
+	layers: undefined,
+	entities: undefined,
 
 	initialize: function() {
+		this.entities = [];
+		this.layers = [];
+	},
+	render: function (time, context) {
+		this.layers.forEach(function (layer) { layer.render(time, context); });
+		this.entities.forEach(function (entity) { entity.render(time, context); });
 	}
 });
 
@@ -19,7 +25,15 @@ var Entity = Backbone.Model.extend({
 	acceleration: {x:0, y:0},
 	velocity: 	{x:0, y:0},
 
-	initialize: function() {
+	initialize: function (options) {
+		this.sprite = options.sprite;
+	},
+	render: function (time, context) {
+		var pos = this.absolute();
+		if (this.sprite) { this.sprite.render(context, pos); }
+	},
+	absolute: function () {
+		return { x: 0, y: 0, width: 64, height: 64 };
 	}
 });
 
@@ -50,6 +64,24 @@ var Sprite = Backbone.Model.extend({
 		return resources.get(this.url).then(function (image) {
 			that.image = image;
 		});
+	},
+	render: function (context, pos) {
+		if (this.image) {
+			if (pos.crop) {
+				context.drawImage(this.image, 
+					pos.crop.x, pos.crop.y, pos.crop.width, pos.crop.height,
+					pos.x, pos.y, pos.width, pos.height);
+			} else {
+				console.log(pos.x, pos.y, pos.width, pos.height)
+				context.drawImage(this.image, pos.x, pos.y, pos.width, pos.height);
+			}
+		}
+		if (this.gradient) {
+
+		}
+		if (this.text) {
+
+		}
 	}
 });
 
@@ -86,14 +118,15 @@ var UIScreen = Backbone.Model.extend({
 	entities: undefined,
 
 	initialize: function() {
+		this.entities = [];
 	},
 	draw: function () {
 
 	},
-	render: function () {
-
+	render: function (time, context) {
+		if (this.scene) { this.scene.render(time, context); }
+		this.entities.forEach(function (entity) { entity.render(time, context); });
 	}
-	
 });
 
 

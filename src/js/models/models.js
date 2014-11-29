@@ -50,8 +50,10 @@ var App = Backbone.Model.extend({
 				scale: { x: 0.2, y: 0.2 }
 			}),
 			game = new Game();
+		
+		gameUI.scene = scene;
 		scene.entities.push(ePlayer);
-		gameUI.scene = gameUI;
+		
 		gameUI.draw();
 		this.setUI(gameUI);
 	},
