@@ -24,19 +24,9 @@ gc.models = (function () {
 		}
 	});
 
-	var Sprite = Backbone.Model.extend({
-		url: undefined,
-		animation : undefined,
-
-		initialize: function () {
-
-		}
-	});
-
 	return {
 		Game		: Game,
-		Player 		: Player,
-		Sprite 		: Sprite
+		Player 		: Player
 	};
 
 }) ();
