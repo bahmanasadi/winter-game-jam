@@ -3,7 +3,7 @@
 var _ = require('lodash'),
 	Entity = require('./engine/Entity.js');
 
-var GenerateEntity = function (sprites, width) {
+var GenerateEntity = function (sprites, width, height) {
 	var objects = [],
 		i = 0;
 
@@ -14,7 +14,7 @@ var GenerateEntity = function (sprites, width) {
 			var sprite = sprites[Math.floor((Math.random() * sprites.length))];
 			objects.push(new Entity({
 				sprite: 	sprite,
-				position: 	{ x: i, y: 22 },
+				position: 	{ x: i, y: height ? Math.random() * height : 22 },
 				size: 		{ x: sprite.image.width, y: sprite.image.height }
 			}));
 			i += sprite.image.width;
