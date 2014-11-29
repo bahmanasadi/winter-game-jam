@@ -26,7 +26,6 @@ _.extend(App.prototype, {
 		this.context.scaleFactor = canvas.width / this.width;
 		
 		canvas.onclick = function (e) {
-			console.log('click', e);
 			if (that.viewport) { that.viewport.click(e.x, e.y); }
 		};
 

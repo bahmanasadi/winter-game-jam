@@ -117,7 +117,6 @@ var GameViewport = function () {
 	_.each(obstacles, function (entity) {
 		that.layers[3].add(entity);
 	});
-	console.log(obstacles);
 
 	var clouds = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds, function (entity) {
