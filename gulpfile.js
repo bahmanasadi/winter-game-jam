@@ -21,7 +21,7 @@ gulp.task('static', ['clean'], function () {
 });
 
 gulp.task('browserify', ['clean'], function () {
-	return browserify('./src/js/main.js')
+	return browserify('./src/js/main.js', { debug: true })
 		.bundle()
 		.pipe(vSource('bundle.js'))
 		.pipe(gulp.dest('./build/'));

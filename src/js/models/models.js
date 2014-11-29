@@ -34,6 +34,10 @@ var resources = {
 
 var App = Backbone.Model.extend({
 	ui: undefined,
+	initialize: function (options) {
+		this.width = options.width;
+		this.height = options.height;
+	},
 	setup: function () {
 		var that = this;
 		console.log('setup');

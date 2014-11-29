@@ -2,8 +2,6 @@
 'use strict';
 
 var $ = require('jquery'),
-	BBPromise = require('bluebird'),
-	_ = require('lodash'),
 	models = require('./models/models.js');
 
 require('requestanimationframe');
