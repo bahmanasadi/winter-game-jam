@@ -19,7 +19,7 @@ _.extend(Entity.prototype, {
 		var sf = context.scaleFactor;
 		return {
 			x: (this.position.x - this.size.x / 2) * sf,
-			y: (this.position.y - this.size.y / 2) * sf,
+			y: (160 - this.position.y - this.size.y / 2) * sf,
 			width: this.size.x * sf, 
 			height: this.size.y * sf
 		};

@@ -17,7 +17,10 @@ var GameViewport = function (attributes) {
 	var sprites = {
 		idle: new Sprite({
 			url: 'img/sprites/s_idle.png'
-		})
+		}),
+		//run: new Sprite({}),
+		//jump: new Sprite({}),
+		//tumble: new Sprite({})
 	};
 
 	this.layers = [
@@ -26,15 +29,22 @@ var GameViewport = function (attributes) {
 		new Layer()  // foreground -- player + obstacles
 	];
 
-	var ePlayer = new Entity({
-		sprite: sprites.idle,
-		position: { x: 20, y: 20 },
-		size: { x: 18, y: 32 }
-	});
+	this.entities = {
+		player: new Entity({
+			sprite: sprites.idle,
+			position: { x: 20, y: 20 },
+			size: { x: 18, y: 32 }
+		})
+	};
 	
-	this.layers[2].entities.push(ePlayer);
+	this.layers[2].entities.push(this.entities.player);
 };
 
-_.extend(GameViewport.prototype, Viewport.prototype);
+_.extend(GameViewport.prototype, Viewport.prototype, {
+	click: function () {
+		this.entities.player.velocity = { y: 5 };
+		this.entities.player.accelaration = { y: -1 };
+	}
+});
 
 module.exports = GameViewport;
