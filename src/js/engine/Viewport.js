@@ -15,10 +15,6 @@ var Viewport = function (attributes) {
 
 _.extend(Viewport.prototype, {
 	render: function (time, context) {
-		var collidedEntity = Generator.DetectCollision(this.entities.player, this.layers[3].entities);
-		if (collidedEntity) {
-			console.log("Collision Detected!!!!!! YOU LOST");
-		}
 		this.layers.forEach(function (layer) { layer.render(time, context); });
 	},
 	click: function () {}

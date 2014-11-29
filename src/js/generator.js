@@ -1,3 +1,4 @@
+/* jshint node: true */
 'use strict';
 
 var _ = require('lodash'),
@@ -35,30 +36,25 @@ var GetEntitiesInScene = function (entities, startX, endX) {
 	return sceneEntities;
 };
 
-var DetectCollision = function (entity, entities) {
-	var startX = entity.position.x;
-	var endX = startX + entity.size.x;
+var DetectCollision = function (entitya, entities) {
+	var ax1 = entitya.position.x - entitya.size.x / 2,
+		ax2 = ax1 + entitya.size.x,
+		ay1 = entitya.position.y - entitya.size.y / 2,
+		ay2 = ay1 + entitya.size.y;
 
-	var startY = entity.position.y;
+	return _.find(entities, function (entityb) {
+		if (entitya === entityb) { return; }
 
-	for (var i=0; i < entities.length; i++) {
-		var otherEntity = entities[i];
-		if (entity == otherEntity) {
-			continue;
+		var bx1 = entityb.position.x - entityb.size.x / 2,
+			bx2 = bx1 + entityb.size.x,
+			by1 = entityb.position.y - entityb.size.y / 2,
+			by2 = by1 + entityb.size.y;
+
+		if ((ax2 > bx1 && ax1 < bx2) &&
+			(ay2 > by1 && ay1 < by2)) {
+			return entityb;
 		}
-
-		var otherStartX = otherEntity.position.x;
-		var otherEndX = otherStartX + otherEntity.size.x;
-
-		var otherStartY = otherEntity.position.y - (otherEntity.size.y/2);
-		var otherEndY = otherStartY + otherEntity.size.y;
-		// TODO Check for height
-		if ( ((startX > otherStartX && startX < otherEndX) || (endX > otherStartX && endX < otherEndX))
-			 && (startY >= otherStartY && startY <= otherEndY) ) {
-			return otherEntity;
-		}
-	}
-	return undefined;
+	});
 };
 
 module.exports  = {

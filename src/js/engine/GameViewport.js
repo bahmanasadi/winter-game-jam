@@ -81,13 +81,13 @@ var GameViewport = function () {
 		}), // sky
 		new Layer({
 			position: { x: 0, y: 0 },
-			velocity: { x: -baseSpeed / 4 },
-			acceleration: { x: -baseAcceleration / 4 }
+			velocity: { x: -baseSpeed / 8 },
+			acceleration: { x: -baseAcceleration / 8 }
 		}), // clouds
 		new Layer({
 			position: { x: 0, y: 0 },
-			velocity: { x: -baseSpeed / 2 },
-			acceleration: { x: -baseAcceleration / 2 }
+			velocity: { x: -baseSpeed / 4 },
+			acceleration: { x: -baseAcceleration / 4 }
 		}), // background -- landmarks
 		new Layer({
 			position: { x: 0, y: 0 },
@@ -120,8 +120,8 @@ var GameViewport = function () {
 			sprite: sprites.run,
 			position: { x: 100, y: 120 },
 			size: { x: 18, y: 32 },
-			acceleration: { x: -this.layers[3].acceleration.x, y: -300 },
-			velocity: { x: -this.layers[3].velocity.x },
+			acceleration: { x: baseAcceleration, y: -300 },
+			velocity: { x: baseSpeed, y: 0 },
 			floorcollision: true
 		}),
 		sky: new Entity({
@@ -147,12 +147,12 @@ var GameViewport = function () {
 
 	var clouds = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds, function (entity) {
-		//that.layers[2].add(entity);
+		that.layers[2].add(entity);
 	});
 
 	var clouds2 = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds2, function (entity) {
-		//that.layers[1].add(entity);
+		that.layers[1].add(entity);
 	});
 
 	that.layers[4].add(this.entities.timeLeft);
@@ -174,6 +174,13 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 	},
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
+
+		var collidedEntity = Generator.DetectCollision(this.entities.player, this.layers[3].entities);
+		if (collidedEntity) {
+			this.entities.player.velocity.y = 0;
+			this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;
+			console.log("Collision Detected!!!!!! YOU LOST");
+		}
 	}
 });
 
