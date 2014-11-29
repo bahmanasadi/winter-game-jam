@@ -15,7 +15,8 @@ var Viewport = function (attributes) {
 _.extend(Viewport.prototype, {
 	render: function (time, context) {
 		this.layers.forEach(function (layer) { layer.render(time, context); });
-	}
+	},
+	click: function () {}
 });
 
 module.exports = Viewport;

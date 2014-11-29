@@ -24,6 +24,9 @@ var GameViewport = function (attributes) {
 		cloud1: new Sprite({
 			url: 'img/sprites/cloud1.png'
 		})
+		//run: new Sprite({}),
+		//jump: new Sprite({}),
+		//tumble: new Sprite({})
 	};
 
 	this.layers = [
@@ -54,8 +57,22 @@ var GameViewport = function (attributes) {
 	this.layers[2].entities.push(eCloud);
 	this.layers[2].entities.push(eHouse);
 	// this.layers[2].entities.push(ePlayer);
+	this.entities = {
+		player: new Entity({
+			sprite: sprites.idle,
+			position: { x: 20, y: 20 },
+			size: { x: 18, y: 32 }
+		})
+	};
+	
+	this.layers[2].entities.push(this.entities.player);
 };
 
-_.extend(GameViewport.prototype, Viewport.prototype);
+_.extend(GameViewport.prototype, Viewport.prototype, {
+	click: function () {
+		this.entities.player.velocity = { y: 5 };
+		this.entities.player.accelaration = { y: -1 };
+	}
+});
 
 module.exports = GameViewport;

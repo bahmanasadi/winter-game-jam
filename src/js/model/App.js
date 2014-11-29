@@ -22,10 +22,13 @@ _.extend(App.prototype, {
 		
 		this.context = canvas.getContext('2d');
 		this.context.imageSmoothingEnabled = false;
-		
+
 		this.context.scaleFactor = canvas.width / 256;
 		
-		//canvas.onclick = click;
+		canvas.onclick = function (e) {
+			console.log('click', e);
+			if (that.viewport) { that.viewport.click(e.x, e.y); }
+		};
 
 		return resources.load([
 			'img/sprites/s_idle.png',
