@@ -7,10 +7,13 @@ if (!gc) {
 gc.models = (function () {
 
 	var Game = Backbone.Model.extend({
-		timeLeft: 0,
-		player: undefined,
-		scene: undefined,
-		obstacles: [],
+		timeLeft: 0,		// seconds
+		player: undefined,  // Player
+		scene: undefined,	// Scene
+		obstacles: [],		// Obstacle
+		menuUI: undefined 	// MenuUI
+		gameUI: undefined 	// GameUI
+		pauseUI: undefined 	// PauseUI
 
 		initialize: function() {
 		}
