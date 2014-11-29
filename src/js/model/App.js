@@ -31,7 +31,9 @@ _.extend(App.prototype, {
 		};
 
 		return resources.load([
-			'img/sprites/s_idle.png'
+			'img/sprites/s_idle.png',
+			'img/sprites/house1.png',
+			'img/sprites/cloud1.png'
 		]).then(function () {
 			console.log('loaded resources');
 			that.render();
