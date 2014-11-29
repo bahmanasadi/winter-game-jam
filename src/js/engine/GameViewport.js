@@ -97,6 +97,7 @@ var GameViewport = function () {
 			size: { x: 18, y: 32 },
 			velocity: { x: -this.layers[3].velocity.x },
 			acceleration: { x: -this.layers[3].acceleration.x },
+			floorcollision: true
 		}),
 		sky: new Entity({
 			sprite: sprites.sky,

@@ -10,6 +10,7 @@ var Entity = function (attributes) {
 		acceleration: {x:0, y:0},
 		velocity: {x:0, y:0},
 		size: {x:0, y:0},
+		floorcollision: false,
 	}, attributes);
 };
 _.extend(Entity.prototype, {
@@ -23,6 +24,9 @@ _.extend(Entity.prototype, {
 		this.position.y += (this.velocity.y || 0) * time;
 		this.velocity.x += (this.acceleration.x || 0) * time;
 		this.velocity.y += (this.acceleration.y || 0) * time;
+		if (this.floorcollision && (this.position.y-this.size.y/2) < 0) {
+			this.velocity.y = 0;
+		}
 	},
 	absolute: function (context) {
 		var sf = context.scaleFactor;
