@@ -21,10 +21,17 @@ var GameViewport = function () {
 
 	var sprites = {
 		sky: new RectangleSprite({
-			fill: '#0D0D31'
+			fill: '#0B4B97'
 		}),
 		idle: new ImageSprite({
 			url: 'img/sprites/s_idle.png'
+		}),
+		run: new ImageSprite({
+			url: 'img/sprites/s_run.png',
+			animate: {
+				speed: 10, // fps
+				slice: { x: 23, y: 32 }
+			}
 		}),
 		house1: new ImageSprite({
 			url: 'img/sprites/house1.png'
@@ -36,7 +43,7 @@ var GameViewport = function () {
 			text: '01:00',
 			fill: 'white'
 		})
-		//run: new Sprite({}),
+		
 		//jump: new Sprite({}),
 		//tumble: new Sprite({})
 	};
@@ -63,8 +70,7 @@ var GameViewport = function () {
 			acceleration: { x: -baseAccelaration }
 		}), // foreground -- player + obstacles
 		new Layer({
-			position: { x: 0, y: 0 },
-
+			position: { x: 0, y: 0 }
 		}) // ui
 	];
 
@@ -86,7 +92,7 @@ var GameViewport = function () {
 	// this.layers[3].entities.push(ePlayer);
 	this.entities = {
 		player: new Entity({
-			sprite: sprites.idle,
+			sprite: sprites.run,
 			position: { x: 20, y: 20 },
 			size: { x: 18, y: 32 },
 			velocity: { x: -this.layers[3].velocity.x },
@@ -95,7 +101,7 @@ var GameViewport = function () {
 		sky: new Entity({
 			sprite: sprites.sky,
 			position: { x: 128, y: 80 },
-			size: { x: 2560, y: 160 }
+			size: { x: 256, y: 160 }
 		}),
 		timeLeft: new Entity({
 			sprite: sprites.timeLeft,
