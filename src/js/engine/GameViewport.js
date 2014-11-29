@@ -97,6 +97,7 @@ var GameViewport = function () {
 			size: { x: 18, y: 32 },
 			velocity: { x: -this.layers[3].velocity.x },
 			acceleration: { x: -this.layers[3].acceleration.x },
+			floorcollision: true
 		}),
 		sky: new Entity({
 			sprite: sprites.sky,
@@ -113,20 +114,19 @@ var GameViewport = function () {
 	this.layers[0].add(this.entities.sky);
 	this.layers[3].add(this.entities.player);
 
-	var obstacles = Generator.GenerateEntity([sprites.house1, sprites.cloud1], 1000.0);
+	var obstacles = Generator.GenerateEntity([sprites.house1], 1000.0);
 	_.each(obstacles, function (entity) {
 		that.layers[3].add(entity);
 	});
-	console.log(obstacles);
 
 	var clouds = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds, function (entity) {
-		that.layers[2].add(entity);
+		// that.layers[2].add(entity);
 	});
 
 	var clouds2 = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds2, function (entity) {
-		that.layers[1].add(entity);
+		// that.layers[1].add(entity);
 	});
 
 	that.layers[4].add(this.entities.timeLeft);
@@ -134,7 +134,7 @@ var GameViewport = function () {
 
 _.extend(GameViewport.prototype, Viewport.prototype, {
 	click: function () {
-		console.log('jump!');
+		// console.log('jump!');
 		this.entities.player.velocity.y = 150;
 		this.entities.player.acceleration.y = -300;
 	}

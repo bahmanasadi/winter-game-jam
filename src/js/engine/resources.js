@@ -16,7 +16,7 @@ var resources = {
 			var img = new Image();
 			img.onload = function () {
 				resources._cache[url] = img;
-				console.log('success');
+				// console.log('success');
 				resolve(img);
 			};
 			img.onerror = function () {
@@ -26,7 +26,7 @@ var resources = {
 		});
     },
     get: function (url) {
-    	console.log('u', url, resources._cache);
+    	// console.log('u', url, resources._cache);
     	return resources._cache[url];
     }
 };
