@@ -27,10 +27,10 @@ var GameViewport = function (attributes) {
 	];
 
 	var ePlayer = new Entity({
-			sprite: sprites.idle,
-			position: { x: 0, y: 0 },
-			scale: { x: 0.2, y: 0.2 }
-		});
+		sprite: sprites.idle,
+		position: { x: 20, y: 20 },
+		size: { x: 18, y: 32 }
+	});
 	
 	this.layers[2].entities.push(ePlayer);
 };
