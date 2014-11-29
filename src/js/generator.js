@@ -1,23 +1,23 @@
 'use strict';
 
 var _ = require('lodash'),
-	engines = require('../engines/engines.js');
+	Entity = require('./engine/Entity.js');
 
-var EntityGenerotor = function (sprites, width, height) {
+var GenerateEntity = function (sprites, width, height) {
 	var objects = [],
 		i = 0;
 
 	while (i < width) {
-		if (Math.random() > 0.5) {
+		if (Math.random() < 0.5) {
 			i += Math.random() * 10 * Math.floor((Math.random() * 10) + 1); // Random gaps
 		} else {
-			var sprite = Math.floor((Math.random() * sprites.length) + 1);
-			objects.push(new engines.Entity({
+			var sprite = sprites[Math.floor((Math.random() * sprites.length))];
+			objects.push(new Entity({
 				sprite: 	sprite,
-				position: 	{ x: i, y: 0 },
-				scale: 		{ x: 1.0, y: 1.0 }
+				position: 	{ x: i, y: height ? Math.random() * height : 22 },
+				size: 		{ x: sprite.image.width, y: sprite.image.height }
 			}));
-			i += sprite.width;
+			i += sprite.image.width;
 		}
 	}
 
@@ -32,9 +32,10 @@ var GetEntitiesInScene = function (entities, startx, endx) {
 			sceneEntities.push (entity);
 		}
 	}
-	return entity;
+	return sceneEntities;
 };
 
 module.exports  = {
-	EntityGenerotor : GetEntitiesInScene
+	GenerateEntity		: GenerateEntity,
+	GetEntitiesInScene  : GetEntitiesInScene
 };
