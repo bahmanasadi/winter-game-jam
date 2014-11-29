@@ -48,6 +48,12 @@ var Game = Backbone.Model.extend({
 	obstacles: [],		// Obstacle
 	initialize: function () {
 		this.player = new Player();
+	},
+	setup: function () {
+
+	},
+	game: function () {
+		
 	}
 })
 
