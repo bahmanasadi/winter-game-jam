@@ -83,12 +83,11 @@ var GameViewport = function () {
 	_.each(obstacles, function (entity) {
 		that.layers[2].add(entity);
 	});
-	console.log(obstacles);
 };
 
 _.extend(GameViewport.prototype, Viewport.prototype, {
 	click: function () {
-		console.log('jump!');
+		// console.log('jump!');
 		this.entities.player.velocity.y = 150;
 		this.entities.player.acceleration.y = -300;
 	}

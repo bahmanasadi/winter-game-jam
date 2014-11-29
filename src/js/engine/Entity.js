@@ -8,7 +8,8 @@ var Entity = function (attributes) {
 		zIndex: 0,
 		position: {x:0, y:0},
 		acceleration: {x:0, y:0},
-		velocity: {x:0, y:0}
+		velocity: {x:0, y:0},
+		size: {x:0, y:0},
 	}, attributes);
 };
 _.extend(Entity.prototype, {
