@@ -15,7 +15,7 @@ var GenerateEntity = function (sprites, width) {
 			objects.push(new Entity({
 				sprite: 	sprite,
 				position: 	{ x: i, y: 22 },
-				size: 		{ x: 50.0, y: 44.0 }
+				size: 		{ x: sprite.image.width, y: sprite.image.height }
 			}));
 			i += sprite.image.width;
 		}
