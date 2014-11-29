@@ -21,7 +21,7 @@ var GameViewport = function () {
 
 	var that = this;
 
-	var sprites = {
+	var sprites = this.sprites = {
 		sky: new RectangleSprite({
 			fill: '#0B4B97'
 		}),
@@ -33,6 +33,14 @@ var GameViewport = function () {
 			animate: {
 				speed: 10, // fps
 				slice: { x: 23, y: 32 }
+			}
+		}),
+		jump: new ImageSprite({
+			url: 'img/sprites/s_jump.png',
+			animate: {
+				speed: 10, // fps
+				slice: { x: 23, y: 32 },
+				repeat: false
 			}
 		}),
 		house1: new ImageSprite({
@@ -162,6 +170,7 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 	click: function () {
 		console.log('jump!');
 		this.entities.player.velocity.y = 150;
+		this.entities.player.sprite = this.sprites.jump;
 	},
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
