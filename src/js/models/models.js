@@ -28,8 +28,7 @@ var App = Backbone.Model.extend({
 				url: 'img/sprites/s_idle.png'
 			})
 		};
-
-		BBPromise.all(_(this.sprites).map(function (sprite) { 
+		BBPromise.all(_.map(this.sprites, function (sprite) { 
 			return sprite.load();
 		})).then(function () {
 			console.log('loaded sprites');
@@ -61,8 +60,9 @@ var App = Backbone.Model.extend({
 		this.ui = ui;
 	},
 	render: function () {
+		var that = this;
 		if (this.ui) { this.ui.render(undefined, this.context); }
-		requestAnimationFrame(this.render);
+		requestAnimationFrame(function () { that.render(); });
 	}
 });
 

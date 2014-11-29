@@ -89,6 +89,9 @@ var UIScreen = Backbone.Model.extend({
 	},
 	draw: function () {
 
+	},
+	render: function () {
+
 	}
 	
 });
