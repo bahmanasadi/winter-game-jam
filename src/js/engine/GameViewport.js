@@ -35,14 +35,14 @@ var GameViewport = function (attributes) {
 
 	var eHouse = new Entity({
 		sprite: sprites.house1,
-		position: {x: 0, y: 0},
-		scale: {x: 0.2, y: 0.2}
+		position: {x: 25, y: 60},
+		size: {x: 50, y: 44}
 	});
 
 	var eCloud = new Entity({
 		sprite: sprites.cloud1,
-		position: {x: 0, y: 0},
-		scale: {x: 0.2, y: 0.2}
+		position: {x: 25, y: 100},
+		size: {x: 50, y: 15}
 	});
 
 	var ePlayer = new Entity({
@@ -51,8 +51,8 @@ var GameViewport = function (attributes) {
 		size: { x: 18, y: 32 }
 	});
 	
-	this.layers[1].entities.push(eCloud);
-	this.layers[1].entities.push(eHouse);
+	this.layers[2].entities.push(eCloud);
+	this.layers[2].entities.push(eHouse);
 	// this.layers[2].entities.push(ePlayer);
 };
 
