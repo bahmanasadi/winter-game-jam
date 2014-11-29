@@ -4,18 +4,8 @@
 var Backbone = require('backbone'),
 	engines = require('../engines/engines.js');
 
-var Game = Backbone.Model.extend({
-	timeLeft: 0,		// seconds
-	player: undefined,  // Player
-	scene: undefined,	// Scene
-	obstacles: [],		// Obstacle
-	menuUI: undefined, 	// MenuUI
-	gameUI: undefined, 	// GameUI
-	pauseUI: undefined, 	// PauseUI
-
-	initialize: function() {
-
-	},
+var App = Backbone.Model.extend({
+	ui: undefined,
 	setup: function () {
 		var canvas = document.createElement('canvas');
 		canvas.width = this.get('width');
@@ -23,22 +13,43 @@ var Game = Backbone.Model.extend({
 		document.body.appendChild(canvas);
 		this.context = canvas.getContext('2d');
 		//canvas.onclick = click;
-		this.GameUI = new engines.UIScreen({ context: this.context });
-		this.MenuUI = new engines.UIScreen({ context: this.context });
-		this.PauseUI = new engines.UIScreen({ context: this.context });
 	},
 	pause: function () {
-
+		var pauseUI = new engines.UIScreen({ context: this.context });
 	},
 	menu: function () {
-		
+		var menuUI = new engines.UIScreen({ context: this.context });
 	},
 	game: function () {
-		var player = new Player();
+		var gameUI = new engines.UIScreen({ context: this.context }),
+			scene = new engines.Scene(),
+			ePlayer = new engines.Entity(),
+			game = new Game();
+		scene.entities.push(ePlayer);
+		gameUI.scene = gameUI;
+		gameUI.draw();
+		this.setUI(gameUI);
+	},
+	setUI: function (ui) {
+		if (this.ui) { this.ui.destroy(); }
+		this.ui = ui;
 		
+	},
+	render: function () {
+		if (this.ui) { this.ui.render(); }
+		requestAnimationFrame(this.render);
 	}
-
 });
+
+var Game = Backbone.Model.extend({
+	timeLeft: 0,		// seconds
+	player: undefined,  // Player
+	scene: undefined,	// Scene
+	obstacles: [],		// Obstacle
+	initialize: function () {
+		this.player = new Player();
+	}
+})
 
 var Player = Backbone.Model.extend({
 	entity: undefined,

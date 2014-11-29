@@ -80,6 +80,13 @@ gc.engines = (function () {
 		entities: undefined,
 
 		initialize: function() {
+			this.entities = [];
+		},
+		render: function () {
+
+		},
+		destroy: function () {
+
 		}
 		
 	});
