@@ -17,6 +17,12 @@ var GameViewport = function (attributes) {
 	var sprites = {
 		idle: new Sprite({
 			url: 'img/sprites/s_idle.png'
+		}),
+		house1: new Sprite({
+			url: 'img/sprites/house1.png'
+		}),
+		cloud1: new Sprite({
+			url: 'img/sprites/cloud1.png'
 		})
 	};
 
@@ -26,13 +32,28 @@ var GameViewport = function (attributes) {
 		new Layer()  // foreground -- player + obstacles
 	];
 
+
+	var eHouse = new Entity({
+		sprite: sprites.house1,
+		position: {x: 0, y: 0},
+		scale: {x: 0.2, y: 0.2}
+	});
+
+	var eCloud = new Entity({
+		sprite: sprites.cloud1,
+		position: {x: 0, y: 0},
+		scale: {x: 0.2, y: 0.2}
+	});
+
 	var ePlayer = new Entity({
 			sprite: sprites.idle,
 			position: { x: 0, y: 0 },
 			scale: { x: 0.2, y: 0.2 }
 		});
 	
-	this.layers[2].entities.push(ePlayer);
+	this.layers[1].entities.push(eCloud);
+	this.layers[1].entities.push(eHouse);
+	// this.layers[2].entities.push(ePlayer);
 };
 
 _.extend(GameViewport.prototype, Viewport.prototype);

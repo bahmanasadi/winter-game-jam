@@ -7,7 +7,7 @@ var _ = require('lodash'),
 var Sprite = function (attributes) {
 	_.extend(this, attributes);
 	this.image = resources.get(this.url);
-	console.log(this.image);
+	console.log(this.image, this.url);
 };
 
 _.extend(Sprite.prototype, {
