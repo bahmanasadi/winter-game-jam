@@ -4,7 +4,7 @@
 var _ = require('lodash'),
 	Entity = require('./engine/Entity.js');
 
-var GenerateEntity = function (sprites, width, height) {
+var generateEntity = function (sprites, width, height) {
 	var objects = [],
 		i = 0;
 
@@ -25,7 +25,7 @@ var GenerateEntity = function (sprites, width, height) {
 	return objects;
 };
 
-var GetEntitiesInScene = function (entities, startX, endX) {
+var getEntitiesInScene = function (entities, startX, endX) {
 	var sceneEntities = [];
 	for (var i=0; i<entities.length; i++) {
 		var entity = entities[i];
@@ -36,7 +36,7 @@ var GetEntitiesInScene = function (entities, startX, endX) {
 	return sceneEntities;
 };
 
-var DetectCollision = function (entitya, entities) {
+var detectCollision = function (entitya, entities)   {
 	var ax1 = entitya.position.x - entitya.size.x / 2,
 		ax2 = ax1 + entitya.size.x,
 		ay1 = entitya.position.y - entitya.size.y / 2,
@@ -58,7 +58,7 @@ var DetectCollision = function (entitya, entities) {
 };
 
 module.exports  = {
-	GenerateEntity		: GenerateEntity,
-	GetEntitiesInScene  : GetEntitiesInScene,
-	DetectCollision		: DetectCollision
+	generateEntity		: generateEntity,
+	getEntitiesInScene  : getEntitiesInScene,
+	detectCollision		: detectCollision
 };

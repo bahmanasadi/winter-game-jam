@@ -3,10 +3,11 @@
 
 var _ = require('lodash'),
 	Entity = require('../engine/Entity.js'),
-	ImageSprite = require('../engine/ImageSprite.js');
+	ImageSprite = require('../engine/ImageSprite.js'),
+	Generator = require('../engine/Generator.js');
 
 var BuildingGenerator = function () {
-	Entity.apply(this, arguments);
+	Generator.apply(this, arguments);
 	this.generatedEntities = [];
 	this.blocks = [];
 			
@@ -18,6 +19,12 @@ var BuildingGenerator = function () {
 				buildingMidDormer: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-dormer.png' }),
 				buildingMidWindow: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-window.png' }),
 				buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' })
+			},
+			thatch: {
+				buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-left.png' }),
+				buildingMid: new ImageSprite({ url: 'img/sprites/building-thatch-mid.png' }),
+				buildingMidWindow: new ImageSprite({ url: 'img/sprites/building-thatch-mid-window.png' }),
+				buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-right.png' })
 			}
 		},
 		roofStyles: {
@@ -33,7 +40,7 @@ var BuildingGenerator = function () {
 		}
 	};
 };
-_.extend(BuildingGenerator.prototype, Entity.prototype, {
+_.extend(BuildingGenerator.prototype, Generator.prototype, {
 	animate: _.throttle(function () {
 		// check if new block needs to be generated
 		var first = _.first(this.blocks),
@@ -58,7 +65,8 @@ _.extend(BuildingGenerator.prototype, Entity.prototype, {
 			entities = [],
 			sprites = _.sample(_.values(this.sprites.wallStyles)),
 
-			buildingCount = Math.round(2 + Math.random() * 8),
+			buildingCountMax = !sprites.buildingMidDormer ? 2 : 8, // shorter thatch
+			buildingCount = Math.round(2 + Math.random() * buildingCountMax),
 			width = buildingCount * buildingWidth,
 			y = buildingHeight / 2 - Math.round(3 + Math.random() * 20);
 		
@@ -74,7 +82,7 @@ _.extend(BuildingGenerator.prototype, Entity.prototype, {
 			var sprite = i === 0 ? sprites.buildingLeft :
 				i === buildingCount - 1 ? sprites.buildingRight :
 				Math.random() < 0.6 ? sprites.buildingMidWindow :
-				Math.random() < 0.4 ? sprites.buildingMidDormer :
+				sprites.buildingMidDormer && Math.random() < 0.4 ? sprites.buildingMidDormer :
 				sprites.buildingMid;
 
 			var section = new Entity({

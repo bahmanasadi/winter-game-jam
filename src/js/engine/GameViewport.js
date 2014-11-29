@@ -8,7 +8,8 @@ var _ = require('lodash'),
 	ImageSprite = require('../engine/ImageSprite.js'),
 	TextSprite = require('../engine/TextSprite.js'),
 	RectangleSprite = require('../engine/RectangleSprite.js'),
-	Generator = require('../generator.js'),
+	utils = require('../utils.js'),
+	Generator = require('../engine/Generator.js'),
 	BuildingGenerator = require('../engine/BuildingGenerator.js'),
 	moment = require('moment');
 
@@ -139,18 +140,18 @@ var GameViewport = function () {
 	this.layers[0].add(this.entities.sky);
 	this.layers[3].add(this.entities.player);
 
-	var obstacles = Generator.GenerateEntity([sprites.house1], 1000.0);
+	var obstacles = utils.generateEntity([sprites.house1], 1000.0);
 	_.each(obstacles, function (entity) {
 		//that.layers[3].add(entity);
 	});
 	console.log(obstacles);
 
-	var clouds = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
+	var clouds = utils.generateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds, function (entity) {
 		that.layers[2].add(entity);
 	});
 
-	var clouds2 = Generator.GenerateEntity([sprites.cloud1], 1000.0, 160);
+	var clouds2 = utils.generateEntity([sprites.cloud1], 1000.0, 160);
 	_.each(clouds2, function (entity) {
 		that.layers[1].add(entity);
 	});
@@ -163,6 +164,11 @@ var GameViewport = function () {
 		//acceleration: { x: baseAcceleration }
 	});
 	that.layers[3].add(this.buildingGenerator);
+
+	this.starGenerator = new Generator({
+		size: { x: 256, y: 160 }
+	});
+	that.layers[1].add(this.starGenerator);
 };
 
 
@@ -175,11 +181,11 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
 
-		var collidedEntity = Generator.DetectCollision(this.entities.player, this.layers[3].entities);
+		var collidedEntity = utils.detectCollision(this.entities.player, this.layers[3].entities);
 		if (collidedEntity) {
 			this.entities.player.velocity.y = 0;
 			this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;
-			console.log("Collision Detected!!!!!! YOU LOST");
+			console.log('Collision Detected!!!!!! YOU LOST');
 		}
 	}
 });

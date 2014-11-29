@@ -41,7 +41,11 @@ _.extend(App.prototype, {
 			'img/sprites/building-blue-roof-plaster-mid.png',
 			'img/sprites/building-blue-roof-plaster-mid-dormer.png',
 			'img/sprites/building-blue-roof-plaster-mid-window.png',
-			'img/sprites/building-blue-roof-plaster-right.png'
+			'img/sprites/building-blue-roof-plaster-right.png',
+			'img/sprites/building-thatch-left.png',
+			'img/sprites/building-thatch-mid.png',
+			'img/sprites/building-thatch-mid-window.png',
+			'img/sprites/building-thatch-right.png',
 		]).then(function () {
 			console.log('loaded resources');
 			that.render();

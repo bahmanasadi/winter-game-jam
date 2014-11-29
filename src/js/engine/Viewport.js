@@ -1,8 +1,7 @@
 /* jshint node: true */
 'use strict';
 
-var _ = require('lodash'),
-	Generator = require('../generator.js');
+var _ = require('lodash');
 
 // Instances
 // GameUI
