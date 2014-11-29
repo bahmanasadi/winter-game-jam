@@ -17,7 +17,6 @@ _.extend(Entity.prototype, {
 		this.animate(time);
 	},
 	animate: function (time) {
-		console.log(time, this.velocity.y, this.position.y, this.size.y);
 		this.position.x += (this.velocity.x || 0) * time;
 		this.position.y += (this.velocity.y || 0) * time;
 		this.velocity.x += (this.acceleration.x || 0) * time;

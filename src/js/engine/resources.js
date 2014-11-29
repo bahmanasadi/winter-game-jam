@@ -26,7 +26,7 @@ var resources = {
 		});
     },
     get: function (url) {
-    	console.log('u', url, resources._cache)
+    	console.log('u', url, resources._cache);
     	return resources._cache[url];
     }
 };
