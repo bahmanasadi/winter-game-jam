@@ -16,7 +16,7 @@ _.extend(Entity.prototype, {
 		if (this.sprite) { this.sprite.render(context, pos); }
 	},
 	absolute: function () {
-		return { x: 0, y: 0, width: 64, height: 64 };
+		return { x: 0, y: 0, width: 72, height: 128};
 	}
 });
 

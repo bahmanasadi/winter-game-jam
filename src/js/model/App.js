@@ -19,9 +19,10 @@ _.extend(App.prototype, {
 		canvas.height = this.height;
 		document.body.appendChild(canvas);
 		this.context = canvas.getContext('2d');
+		this.context.imageSmoothingEnabled = false;
 		//canvas.onclick = click;
 
-		resources.load([
+		return resources.load([
 			'img/sprites/s_idle.png'
 		]).then(function () {
 			console.log('loaded resources');
@@ -46,7 +47,7 @@ _.extend(App.prototype, {
 	render: function () {
 		var that = this;
 		this.context.clearRect(0, 0, this.width, this.height);
-		this.viewport.render(undefined, this.context);
+		if (this.viewport) { this.viewport.render(undefined, this.context); }
 		requestAnimationFrame(function () { that.render(); });
 	}
 });
