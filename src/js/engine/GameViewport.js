@@ -8,10 +8,12 @@ var _ = require('lodash'),
 	ImageSprite = require('../engine/ImageSprite.js'),
 	TextSprite = require('../engine/TextSprite.js'),
 	RectangleSprite = require('../engine/RectangleSprite.js'),
+	StarSprite = require('../engine/StarSprite.js'),
 	utils = require('../utils.js'),
 	Generator = require('../engine/Generator.js'),
 	BuildingGenerator = require('../engine/BuildingGenerator.js'),
-	moment = require('moment');
+	moment = require('moment'),
+	sound = require('../engine/sound');
 
 // Instances
 // GameUI
@@ -26,16 +28,16 @@ var GameViewport = function () {
 		sky: new RectangleSprite({
 			fill: '#0B4B97'
 		}),
-		star1: new RectangleSprite({
+		star1: new StarSprite({
 			fill: '#FFFFFF'
 		}),
-		star2: new RectangleSprite({
+		star2: new StarSprite({
 			fill: '#1F61B0'
 		}),
-		star3: new RectangleSprite({
+		star3: new StarSprite({
 			fill: '#CCCCCC'
 		}),
-		star4: new RectangleSprite({
+		star4: new StarSprite({
 			fill: '#EEEEEE'
 		}),
 		idle: new ImageSprite({
@@ -195,17 +197,16 @@ var GameViewport = function () {
 		size: { x: 256, y: 160 },
 		sprites: [sprites.star1, sprites.star2, sprites.star3, sprites.star4],
 		entitySize: { x: 1, y: 1 },
-		blockSize: { x: 5 },
-		entityCount: { min: 13, max: 18 }
+		blockSize: { x: 15 },
+		entityCount: { min: 2, max: 6 }
 	});
 	that.layers.sky.add(this.starGenerator);
 
 	this.cloudGenerator1 = new Generator({
 		size: { x: 256, y: 160 },
 		sprites: [sprites.cloud1],
-		entitySize: { x: 78, y: 40 },
 		blockSize: { x: 256 },
-		entityCount: { min: 3, max: 8 }
+		entityCount: { min: 2, max: 6 }
 	});
 	that.layers.bgFar.add(this.cloudGenerator1);
 
@@ -214,9 +215,11 @@ var GameViewport = function () {
 		sprites: [sprites.cloud1],
 		entitySize: { x: 46, y: 24 },
 		blockSize: { x: 256 },
-		entityCount: { min: 3, max: 8 }
+		entityCount: { min: 1, max: 3 }
 	});
 	that.layers.bgClose.add(this.cloudGenerator2);
+
+	sound.music('game');
 };
 
 
@@ -237,6 +240,7 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 				console.log('jump!', x, y);
 				this.entities.player.velocity.y = 150;
 				this.entities.player.sprite = this.sprites.jump;
+				sound.play('jump');
 			}
 		}
 	},
@@ -256,6 +260,7 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 				this.entities.player.velocity.y = -100;
 				this.entities.player.velocity.x = 0;
 				this.gameover = true;
+				sound.music('gameover');
 				this.layers.ui.add(this.entities.gameover);
 				//this.entities.score.sprite.text = 'Score: ' + (this.game.player.score-1);
 				//this.layers[4].add(this.entities.score);

@@ -33,10 +33,11 @@ _.extend(Generator.prototype, Entity.prototype, {
 			};
 		_.times(Math.round(that.entityCount.min + Math.random() * (that.entityCount.max - that.entityCount.min)), function () {
 			var x = Math.round(x1 + Math.random() * that.blockSize.x),
-				y = Math.round(Math.random() * 160);
+				y = Math.round(Math.random() * 160),
+				sprite = _.sample(that.sprites);
 			var entity = new Entity({
-				sprite: _.sample(that.sprites),
-				size: that.entitySize,
+				sprite: sprite,
+				size: that.entitySize || { x: sprite.image.width, y: sprite.image.height },
 				position: { x: x, y: y }
 			});
 			that.layer.add(entity);
