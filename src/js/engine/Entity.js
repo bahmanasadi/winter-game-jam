@@ -9,9 +9,11 @@ var Entity = function (attributes) {
 		position: {x:0, y:0},
 		acceleration: {x:0, y:0},
 		velocity: {x:0, y:0},
-		size: {x:0, y:0},
 		type: undefined
 	}, attributes);
+	if (this.sprite && !this.size) {
+		this.size = { x: this.sprite.image.width, y: this.sprite.image.height };
+	}
 };
 _.extend(Entity.prototype, {
 	types : {player:'player', other: 'other'},

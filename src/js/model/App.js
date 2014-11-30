@@ -73,7 +73,11 @@ _.extend(App.prototype, {
 				'img/sprites/building-red-roof-brick-right.png',
 				'img/sprites/chimney-paint1.png',
 				'img/sprites/chimney-brick1.png',
-				'img/sprites/chimney-brick2.png'
+				'img/sprites/chimney-brick2.png',
+				'img/sprites/gift1.png',
+				'img/sprites/gift2.png',
+				'img/sprites/gift3.png',
+				'img/sprites/gift4.png'
 			]),
 			BBPromise.all([
 				sound.load('jump', 'sound/jump.wav'),

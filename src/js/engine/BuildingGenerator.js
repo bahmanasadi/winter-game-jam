@@ -10,6 +10,7 @@ var BuildingGenerator = function () {
 	Generator.apply(this, arguments);
 	this.generatedEntities = [];
 	this.blocks = [];
+	this.chimneys = [];
 	
 	this.sprites = [
 		{
@@ -136,9 +137,10 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 				var chimney = new Entity({
 					sprite: _.sample(sprites.chimney),
 					position: { x: x + i * buildingWidth, y: y + 30 },
-					size: { x: 19, y: 50 }
+					size: { x: 19, y: 50 },
 				});
 				entities.push(chimney);
+				that.chimneys.push(chimney);
 				chimneyProbability = -0.2;
 			} else {
 				chimneyProbability += 0.45;

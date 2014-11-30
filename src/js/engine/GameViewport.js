@@ -87,7 +87,13 @@ var GameViewport = function () {
 		pauseButton: new TextSprite({
 			text: 'Pause',
 			fill: 'white'
-		})
+		}),
+		present: [
+			new ImageSprite({ url: 'img/sprites/gift1.png' }),
+			new ImageSprite({ url: 'img/sprites/gift2.png' }),
+			new ImageSprite({ url: 'img/sprites/gift3.png' }),
+			new ImageSprite({ url: 'img/sprites/gift4.png' })
+		]
 
 		
 		//jump: new Sprite({}),
@@ -137,6 +143,11 @@ var GameViewport = function () {
 		velocity: { x: -baseSpeed / 4 },
 		acceleration: { x: -baseAcceleration / 4 }
 	}); // background -- landmarks
+	this.layers.fg2 = new Layer({
+		position: { x: 0, y: 0 },
+		velocity: { x: -baseSpeed },
+		acceleration: { x: -baseAcceleration }
+	}); // presents
 	this.layers.fg = new Layer({
 		position: { x: 0, y: 0 },
 		velocity: { x: -baseSpeed },
@@ -207,8 +218,8 @@ var GameViewport = function () {
 		size: { x: 256, y: 160 },
 		sprites: [sprites.star1, sprites.star2, sprites.star3, sprites.star4],
 		entitySize: { x: 1, y: 1 },
-		blockSize: { x: 15 },
-		entityCount: { min: 2, max: 6 }
+		blockSize: { x: 64 },
+		entityCount: { min: 1, max: 6 }
 	});
 	that.layers.sky.add(this.starGenerator);
 
@@ -216,7 +227,7 @@ var GameViewport = function () {
 		size: { x: 256, y: 160 },
 		sprites: [sprites.cloud1],
 		blockSize: { x: 256 },
-		entityCount: { min: 2, max: 6 }
+		entityCount: { min: 1, max: 3 }
 	});
 	that.layers.bgFar.add(this.cloudGenerator1);
 
@@ -225,7 +236,7 @@ var GameViewport = function () {
 		sprites: [sprites.cloud1],
 		entitySize: { x: 46, y: 24 },
 		blockSize: { x: 256 },
-		entityCount: { min: 1, max: 3 }
+		entityCount: { min: 0, max: 2 }
 	});
 	that.layers.bgClose.add(this.cloudGenerator2);
 
@@ -285,6 +296,19 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 			this.entities.player.velocity.y = 0;
 			//this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;
 			console.log('Collision with ground');
+		}
+
+		var chimneyJumped = utils.detectJumpingOver(this.entities.player, this.buildingGenerator.chimneys);
+		if (chimneyJumped && !chimneyJumped.jumped) {
+			chimneyJumped.jumped = true;
+			console.log('Chimney jumped!');
+			sound.play('point');
+			var present = new Entity({
+				sprite: _.sample(this.sprites.present),
+				position: { x: chimneyJumped.position.x, y: this.entities.player.position.y - 15 },
+				acceleration: { x: 0, y: -300 } 
+			});
+			this.layers.fg2.add(present);
 		}
 
 	}
