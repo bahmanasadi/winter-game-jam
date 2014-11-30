@@ -99,7 +99,14 @@ _.extend(App.prototype, {
 				'img/sprites/cloud-small-face-happy-smiley.png',
 				'img/sprites/cloud-small-face-ouch-ooo.png',
 				'img/sprites/cloud-small-face-ouch-sad.png',
-				'img/sprites/cloud-small-face-ouch-shock.png'
+				'img/sprites/cloud-small-face-ouch-shock.png',
+				'img/sprites/bottle-fill0.png',
+				'img/sprites/bottle-fill1.png',
+				'img/sprites/bottle-fill2.png',
+				'img/sprites/bottle-fill3.png',
+				'img/sprites/bottle-fill4.png',
+				'img/sprites/bottle-fill5.png',
+				'img/sprites/bottle-fill6.png'
 			]),
 			BBPromise.all([
 				sound.load('jump', 'sound/jump.wav'),

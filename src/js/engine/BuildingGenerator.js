@@ -105,7 +105,7 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 			sprites = _.sample(_.values(this.sprites)),
 			gameStart = x < 128,
 
-			buildingCountMin = gameStart ? 6 : 2,
+			buildingCountMin = gameStart ? 4 : 2,
 			buildingCountMax = sprites.keepShort ? 2 : 8, // shorter thatch
 			buildingCount = Math.round(buildingCountMin + Math.random() * buildingCountMax),
 			width = buildingCount * buildingWidth,

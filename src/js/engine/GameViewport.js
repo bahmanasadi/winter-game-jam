@@ -16,6 +16,14 @@ var _ = require('lodash'),
 	moment = require('moment'),
 	sound = require('../engine/sound');
 
+var labels = [
+	'Merry',
+	'Tipsy',
+	'Woozy',
+	'Sloshed',
+	'Sozzled'
+];
+
 // Instances
 // GameUI
 // MenuUI
@@ -24,6 +32,9 @@ var GameViewport = function () {
 	Viewport.apply(this, arguments); // super()
 	console.log(this.game.player);
 	var that = this;
+
+	this.cherry = 0;
+	this.level = 1;
 
 	var sprites = this.sprites = {
 		sky: new RectangleSprite({
@@ -96,23 +107,33 @@ var GameViewport = function () {
 		
 		timeLeft: new TextSprite({
 			text: '01:00',
-			fill: 'white'
+			fill: 'white',
+			shadow: true
 		}),
 		gameover: new TextSprite({
 			text: 'Game Over',
-			fill: 'white'
+			fill: 'white',
+			shadow: true
+		}),
+		levelNotice: new TextSprite({
+			text: '',
+			fill: 'white',
+			shadow: true
 		}),
 		score: new TextSprite({
 			text: 'Score',
-			fill: 'white'
+			fill: 'white',
+			shadow: true
 		}),
 		paused: new TextSprite({
-			text: 'Puased',
-			fill: 'white'
+			text: 'Paused',
+			fill: 'white',
+			shadow: true
 		}),
 		pauseButton: new TextSprite({
 			text: 'Pause',
-			fill: 'white'
+			fill: 'white',
+			shadow: true
 		}),
 		present: [
 			new ImageSprite({ url: 'img/sprites/gift1.png' }),
@@ -128,7 +149,16 @@ var GameViewport = function () {
 			ouchShock: new ImageSprite({ url: 'img/sprites/chimney-face-ouch-shock.png' }),
 			sleep: new ImageSprite({ url: 'img/sprites/chimney-face-sleep.png' }),
 			surprised: new ImageSprite({ url: 'img/sprites/chimney-face-surprised.png' })
-		}
+		},
+		bottle: [
+			new ImageSprite({ url: 'img/sprites/bottle-fill0.png' }),
+			new ImageSprite({ url: 'img/sprites/bottle-fill1.png' }),
+			new ImageSprite({ url: 'img/sprites/bottle-fill2.png' }),
+			new ImageSprite({ url: 'img/sprites/bottle-fill3.png' }),
+			new ImageSprite({ url: 'img/sprites/bottle-fill4.png' }),
+			new ImageSprite({ url: 'img/sprites/bottle-fill5.png' }),
+			new ImageSprite({ url: 'img/sprites/bottle-fill6.png' })
+		]
 
 		
 		//jump: new Sprite({}),
@@ -221,6 +251,11 @@ var GameViewport = function () {
 			position: { x: 128, y: 80 },
 			size: { x: 0, y: 0 }
 		}),
+		levelNotice: new Entity({
+			sprite: sprites.levelNotice,
+			position: { x: 128, y: 120 },
+			size: { x: 0, y: 0 }
+		}),
 		score: new Entity({
 			sprite: sprites.score,
 			position: { x: 128, y: 60 },
@@ -235,6 +270,25 @@ var GameViewport = function () {
 			sprite: sprites.pauseButton,
 			position: { x: 40, y: 140 },
 			size: { x: 0, y: 0 }
+		}),
+		bottle: new Entity({
+			sprite: sprites.bottle[0],
+			position: { x: 20, y: 80 }
+		}),
+		bottleLabel: new Entity({
+			sprite: new TextSprite({ text: 'Merry', fontSize: 3, fill: '#000000' }),
+			position: { x: 22, y: 66 },
+			size: { x: 5, y: 3 }
+		}),
+		bottleLabel1: new Entity({
+			sprite: new TextSprite({ text: 'on', fontSize: 3, fill: '#000000' }),
+			position: { x: 22, y: 62 },
+			size: { x: 5, y: 3 }
+		}),
+		bottleLabel2: new Entity({
+			sprite: new TextSprite({ text: 'Sherry', fontSize: 2.6, fill: '#000000' }),
+			position: { x: 22, y: 58 },
+			size: { x: 5, y: 3 }
 		})
 	};
 	
@@ -243,6 +297,11 @@ var GameViewport = function () {
 	this.layers.fg.add(this.entities.player);
 	that.layers.ui.add(this.entities.timeLeft);
 	//that.layers.ui.add(this.entities.pauseButton);
+	that.layers.ui.add(this.entities.bottle);
+	that.layers.ui.add(this.entities.bottleLabel);
+	that.layers.ui.add(this.entities.bottleLabel1);
+	that.layers.ui.add(this.entities.bottleLabel2);
+	that.layers.ui.add(this.entities.levelNotice);
 
 	this.buildingGenerator = new BuildingGenerator({
 		size: { x: 256, y: 160 },
@@ -375,6 +434,44 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 			setTimeout(function () {
 				chimneyJumped.face.sprite = _.sample([ that.sprites.chimneyFace.happyPleased, that.sprites.chimneyFace.happySmiley ]);
 			}, 400);
+			
+			if (this.level === 1) {
+				this.cherry += 3;
+			} else if (this.level === 2) {
+				this.cherry += 2;
+			} else if (this.level > 2) {
+				this.cherry += 1;
+			}
+			if (this.cherry > 5) {
+				this.cherry = 6;
+				this.level++;
+				this.entities.bottleLabel.sprite.text = labels[Math.min(this.level, 4) - 1];
+				this.entities.levelNotice.sprite.text = labels[Math.min(this.level, 4) - 1] + new Array(this.level).join('!');
+				this.entities.levelNotice.sprite.fill = '#FFFFFF';
+				var glug = function () {
+					that.cherry--;
+					that.entities.bottle.sprite = that.sprites.bottle[that.cherry];
+					if (that.cherry > 0) {
+						setTimeout(glug, 100);
+					}
+				};
+				setTimeout(glug, 100);
+				var skyColor = this.entities.sky.sprite.fill;
+				this.entities.sky.sprite.fill = '#ccc';
+				setTimeout(function () {
+					that.entities.sky.sprite.fill = skyColor;
+				}, 100);
+				setTimeout(function () {
+					that.entities.levelNotice.sprite.fill = '#4277B7';
+				}, 2500);
+				setTimeout(function () {
+					that.entities.levelNotice.sprite.fill = '#1F61B0';
+				}, 2750);
+				setTimeout(function () {
+					that.entities.levelNotice.sprite.text = '';
+				}, 3000);
+			}
+			this.entities.bottle.sprite = this.sprites.bottle[this.cherry];
 		}
 
 	}
