@@ -12,31 +12,34 @@ var BuildingGenerator = function () {
 	this.blocks = [];
 			
 	this.sprites = {
-		wallStyles: {
-			plaster: {
-				buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-left.png' }),
-				buildingMid: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid.png' }),
-				buildingMidDormer: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-dormer.png' }),
-				buildingMidWindow: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-window.png' }),
-				buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' })
-			},
-			thatch: {
-				buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-left.png' }),
-				buildingMid: new ImageSprite({ url: 'img/sprites/building-thatch-mid.png' }),
-				buildingMidWindow: new ImageSprite({ url: 'img/sprites/building-thatch-mid-window.png' }),
-				buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-right.png' })
-			}
+		plaster: {
+			buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-left.png' }),
+			buildingMid: [
+				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid.png' }),
+				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-dormer.png' }),
+				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-window.png' })
+			],
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' })
 		},
-		roofStyles: {
-			greyTile: {
-
-			},
-			redTile: {
-
-			},
-			thatch: {
-
-			}
+		thatch: {
+			keepShort: true,
+			buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-left.png' }),
+			buildingMid: [
+				new ImageSprite({ url: 'img/sprites/building-thatch-mid.png' }),
+				new ImageSprite({ url: 'img/sprites/building-thatch-mid-window.png' })
+			],
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-right.png' })
+		},
+		thatchtudor: {
+			keepShort: true,
+			buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-left.png' }),
+			buildingMid: [
+				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid.png' }),
+				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-window.png' }),
+				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-crossdown.png' }),
+				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-crossup.png' })
+			],
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-right.png' })
 		}
 	};
 };
@@ -54,20 +57,21 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 		if (last && last.position.x + last.size.x / 2 < -this.layer.position.x + this.size.x / 2 + 256) {
 			this.generateBlock(last.position.x + last.size.x / 2);
 			//this.player.score++;
-			console.log('score++')
+			console.log('score++');
 		}
 	}, 100),
 	// A block consists of a left side, a number of mid parts and a right side
 	generateBlock: function (x) {
 		console.log('x', x);
-		x = Math.round(x + 32 + Math.random() * 128); // create a gap
+		x = Math.round(x + 32 + Math.random() * 32); // create a gap
 		var that = this,
 			buildingWidth = 64,
 			buildingHeight = 80,
 			entities = [],
-			sprites = _.sample(_.values(this.sprites.wallStyles)),
+			type = _.sample(_.keys(this.sprites)),
+			sprites = this.sprites[type],
 
-			buildingCountMax = !sprites.buildingMidDormer ? 2 : 8, // shorter thatch
+			buildingCountMax = sprites.keepShort ? 2 : 8, // shorter thatch
 			buildingCount = Math.round(2 + Math.random() * buildingCountMax),
 			width = buildingCount * buildingWidth,
 			y = buildingHeight / 2 - Math.round(3 + Math.random() * 20);
@@ -83,9 +87,7 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 		_.times(buildingCount, function (i) {
 			var sprite = i === 0 ? sprites.buildingLeft :
 				i === buildingCount - 1 ? sprites.buildingRight :
-				Math.random() < 0.6 ? sprites.buildingMidWindow :
-				sprites.buildingMidDormer && Math.random() < 0.4 ? sprites.buildingMidDormer :
-				sprites.buildingMid;
+				_.sample(sprites.buildingMid);
 
 			var section = new Entity({
 				sprite: sprite,

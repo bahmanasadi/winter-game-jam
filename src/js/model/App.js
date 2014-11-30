@@ -30,9 +30,15 @@ _.extend(App.prototype, {
 		this.context.scaleFactor = scaleFactor;
 		this.context.marginTop = (canvas.height - (scaleFactor * this.height)) / 2;
 		
-		canvas.onclick = function (e) {
+		canvas.addEventListener('click', function (e) {
 			if (that.viewport) { that.viewport.click(e.x, e.y); }
-		};
+		});
+		canvas.addEventListener('touch', function (e) {
+			if (that.viewport) { that.viewport.click(e.x, e.y); }
+		});
+		window.addEventListener('keydown', function (e) {
+			if (that.viewport) { that.viewport.click(0, 0); }
+		});
 
 		return BBPromise.all([
 			resources.load([
@@ -50,7 +56,13 @@ _.extend(App.prototype, {
 				'img/sprites/building-thatch-left.png',
 				'img/sprites/building-thatch-mid.png',
 				'img/sprites/building-thatch-mid-window.png',
-				'img/sprites/building-thatch-right.png'
+				'img/sprites/building-thatch-right.png',
+				'img/sprites/building-thatch-tudor-left.png',
+				'img/sprites/building-thatch-tudor-mid.png',
+				'img/sprites/building-thatch-tudor-mid-window.png',
+				'img/sprites/building-thatch-tudor-mid-crossdown.png',
+				'img/sprites/building-thatch-tudor-mid-crossup.png',
+				'img/sprites/building-thatch-tudor-right.png'
 			]),
 			BBPromise.all([
 				sound.load('jump', 'sound/jump.wav'),
