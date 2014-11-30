@@ -36,7 +36,7 @@ var getEntitiesInScene = function (entities, startX, endX) {
 	return sceneEntities;
 };
 
-var detectCollision = function (entitya, entities)   {
+var detectCollision = function (entitya, entities, horiz, vert)   {
 	var ax1 = entitya.position.x - entitya.size.x / 2,
 		ax2 = ax1 + entitya.size.x,
 		ay1 = entitya.position.y - entitya.size.y / 2,
@@ -48,17 +48,29 @@ var detectCollision = function (entitya, entities)   {
 		var bx1 = entityb.position.x - entityb.size.x / 2,
 			bx2 = bx1 + entityb.size.x,
 			by1 = entityb.position.y - entityb.size.y / 2,
-			by2 = by1 + entityb.size.y;
+			by2 = by1 + entityb.size.y,
+			horizCollision = ax2 > bx1 && ax1 < bx2,
+			vertCollection = ay2 > by1 && ay1 < by2;
 
-		if ((ax2 > bx1 && ax1 < bx2) &&
-			(ay2 > by1 && ay1 < by2)) {
+		if ((horiz && horizCollision) ||
+			(vert && vertCollection) ||
+			(horizCollision && vertCollection)) {
 			return entityb;
 		}
 	});
 };
 
+var detectVerticalCollision = function (entitya, entities) {
+	return detectCollision(entitya, entities, true, false);
+};
+var detectHorizontalCollision = function (entitya, entities) {
+	return detectCollision(entitya, entities, false, true);
+};
+
 module.exports  = {
 	generateEntity		: generateEntity,
 	getEntitiesInScene  : getEntitiesInScene,
-	detectCollision		: detectCollision
+	detectCollision		: detectCollision,
+	detectHorizontalCollision: detectHorizontalCollision,
+	detectVerticalCollision: detectVerticalCollision
 };

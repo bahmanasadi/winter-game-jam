@@ -179,12 +179,19 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
 
-		var collidedEntity = utils.detectCollision(this.entities.player, this.layers.fg.entities);
+		var collidedEntity = utils.detectVerticalCollision(this.entities.player, this.layers.fg.entities);
 		if (collidedEntity) {
 			this.entities.player.velocity.y = 0;
 			this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;
+			console.log('Collision with ground');
+		}
+		collidedEntity = utils.detectHorizontalCollision(this.entities.player, this.layers.fg.entities);
+		if (collidedEntity) {
+			//this.entities.player.velocity.x = 0;
+			//this.entities.player.position.x = collidedEntity.position.x + collidedEntity.size.x / 2 + this.entities.player.size.x / 2;
 			console.log('Collision Detected!!!!!! YOU LOST');
 		}
+
 	}
 });
 
