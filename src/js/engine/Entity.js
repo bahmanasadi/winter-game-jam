@@ -28,12 +28,17 @@ _.extend(Entity.prototype, {
 		this.velocity.x += (this.acceleration.x || 0) * time;
 		this.velocity.y += (this.acceleration.y || 0) * time;
 	},
+
+	haze: function () {
+		return (window.game.level - 1) * (Math.max(0, this.position.x + this.layer.position.x - 160) / 80);
+	},
 	absolute: function (context) {
 		var sf = context.scaleFactor,
-			marginTop = context.marginTop;
+			marginTop = context.marginTop,
+			haze = this.haze();
 		return {
-			x: Math.round((this.position.x + this.layer.position.x - this.size.x / 2) * sf),
-			y: marginTop + Math.round((160 - this.position.y + this.layer.position.y - this.size.y / 2) * sf),
+			x: Math.round((this.position.x + this.layer.position.x - this.size.x / 2 + _.random(-haze, haze)) * sf),
+			y: marginTop + Math.round((160 - this.position.y + this.layer.position.y - this.size.y / 2  + _.random(-haze, haze)) * sf),
 			width: Math.round(this.size.x) * sf, 
 			height: Math.round(this.size.y) * sf
 		};

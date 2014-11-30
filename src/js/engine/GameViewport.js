@@ -35,6 +35,7 @@ var GameViewport = function () {
 
 	this.cherry = 0;
 	this.level = 1;
+	window.game = this;
 
 	var sprites = this.sprites = {
 		sky: new RectangleSprite({
@@ -248,7 +249,7 @@ var GameViewport = function () {
 		}),
 		gameover: new Entity({
 			sprite: sprites.gameover,
-			position: { x: 128, y: 80 },
+			position: { x: 128, y: 120 },
 			size: { x: 0, y: 0 }
 		}),
 		levelNotice: new Entity({
