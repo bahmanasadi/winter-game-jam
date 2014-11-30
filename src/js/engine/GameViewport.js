@@ -65,8 +65,20 @@ var GameViewport = function () {
 		house1: new ImageSprite({
 			url: 'img/sprites/house1.png'
 		}),
-		cloud1: new ImageSprite({
-			url: 'img/sprites/cloud1.png'
+		cloudLarge1: new ImageSprite({
+			url: 'img/sprites/cloud-large1.png'
+		}),
+		cloudLarge2: new ImageSprite({
+			url: 'img/sprites/cloud-large2.png'
+		}),
+		cloudSmall1: new ImageSprite({
+			url: 'img/sprites/cloud-small1.png'
+		}),
+		cloudSmall2: new ImageSprite({
+			url: 'img/sprites/cloud-small2.png'
+		}),
+		cloudSmall3: new ImageSprite({
+			url: 'img/sprites/cloud-small3.png'
 		}),
 		timeLeft: new TextSprite({
 			text: '01:00',
@@ -226,6 +238,7 @@ var GameViewport = function () {
 
 	this.starGenerator = new Generator({
 		size: { x: 256, y: 160 },
+		position: { x: 128, y: 80 },
 		sprites: [sprites.star1, sprites.star2, sprites.star3, sprites.star4],
 		entitySize: { x: 1, y: 1 },
 		blockSize: { x: 64 },
@@ -234,18 +247,20 @@ var GameViewport = function () {
 	that.layers.sky.add(this.starGenerator);
 
 	this.cloudGenerator1 = new Generator({
-		size: { x: 256, y: 160 },
-		sprites: [sprites.cloud1],
-		blockSize: { x: 256 },
-		entityCount: { min: 1, max: 3 }
+		size: { x: 256, y: 100 },
+		position: { x: 128, y: 130 },
+		sprites: [sprites.cloudLarge1, sprites.cloudLarge2],
+		blockSize: { x: 128 },
+		entityCount: { min: 0, max: 2 }
 	});
 	that.layers.bgFar.add(this.cloudGenerator1);
 
 	this.cloudGenerator2 = new Generator({
-		size: { x: 256, y: 160 },
-		sprites: [sprites.cloud1],
-		entitySize: { x: 46, y: 24 },
-		blockSize: { x: 256 },
+		size: { x: 256, y: 100 },
+		position: { x: 128, y: 130 },
+		sprites: [sprites.cloudSmall1, sprites.cloudSmall2, sprites.cloudSmall3],
+		//entitySize: { x: 46, y: 24 },
+		blockSize: { x: 128 },
 		entityCount: { min: 0, max: 2 }
 	});
 	that.layers.bgClose.add(this.cloudGenerator2);
