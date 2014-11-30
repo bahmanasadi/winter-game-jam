@@ -11,6 +11,7 @@ var App = function (attributes) {
 };
 _.extend(App.prototype, {
 	ui: undefined,
+	viewport: undefined,
 	setup: function () {
 		var that = this;
 		console.log('setup');

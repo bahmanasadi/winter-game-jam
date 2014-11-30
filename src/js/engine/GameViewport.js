@@ -19,7 +19,7 @@ var _ = require('lodash'),
 // PauseUI
 var GameViewport = function () {
 	Viewport.apply(this, arguments); // super()
-
+	console.log(this.game.player);
 	var that = this;
 
 	var sprites = this.sprites = {
@@ -56,6 +56,10 @@ var GameViewport = function () {
 		}),
 		gameover: new TextSprite({
 			text: 'Game Over',
+			fill: 'white'
+		}),
+		score: new TextSprite({
+			text: 'Score',
 			fill: 'white'
 		}),
 		paused: new TextSprite({
@@ -166,6 +170,11 @@ var GameViewport = function () {
 			position: { x: 128, y: 80 },
 			size: { x: 0, y: 0 }
 		}),
+		score: new Entity({
+			sprite: sprites.score,
+			position: { x: 128, y: 60 },
+			size: { x: 0, y: 0 }
+		}),
 		paused: new Entity({
 			sprite: sprites.paused,
 			position: { x: 128, y: 80 },
@@ -201,7 +210,8 @@ var GameViewport = function () {
 	that.layers[4].add(this.entities.pauseButton);
 
 	this.buildingGenerator = new BuildingGenerator({
-		size: { x: 256, y: 160 }
+		size: { x: 256, y: 160 },
+		player: this.game.player
 		//velocity: { x: baseSpeed },
 		//acceleration: { x: baseAcceleration }
 	});
@@ -243,6 +253,8 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 				this.entities.player.velocity.x = 0;
 				this.gameover = true;
 				this.layers[4].add(this.entities.gameover);
+				this.entities.score.sprite.text = 'Score: ' + (this.game.player.score-1);
+				this.layers[4].add(this.entities.score);
 			} else {
 				this.entities.player.sprite = this.sprites.run;
 				this.entities.player.velocity.y = 0;
