@@ -152,7 +152,6 @@ var GameViewport = function () {
 			size: { x: 18, y: 32 },
 			acceleration: { x: baseAcceleration, y: -300 },
 			velocity: { x: baseSpeed, y: 0 },
-			floorcollision: true,
 			type: Entity.prototype.types.player
 		}),
 		sky: new Entity({
@@ -243,6 +242,8 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
 
+		
+
 		var collidedEntity = utils.detectCollision(this.entities.player, this.layers[3].entities);
 		if (collidedEntity) {
 			var playerY = Math.ceil(this.entities.player.position.y);
@@ -260,6 +261,10 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 				this.entities.player.velocity.y = 0;
 				this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;				
 			}
+		} else if ((this.entities.player.position.y-this.entities.player.size.y/2) < 5) {
+			// Floor collision
+			this.entities.player.sprite = this.sprites.run;
+			this.entities.player.velocity.y = 0;
 		}
 	}
 });
