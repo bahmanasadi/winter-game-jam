@@ -62,7 +62,10 @@ _.extend(App.prototype, {
 				'img/sprites/building-thatch-tudor-mid-window.png',
 				'img/sprites/building-thatch-tudor-mid-crossdown.png',
 				'img/sprites/building-thatch-tudor-mid-crossup.png',
-				'img/sprites/building-thatch-tudor-right.png'
+				'img/sprites/building-thatch-tudor-right.png',
+				'img/sprites/chimney-paint1.png',
+				'img/sprites/chimney-brick1.png',
+				'img/sprites/chimney-brick2.png'
 			]),
 			BBPromise.all([
 				sound.load('jump', 'sound/jump.wav'),

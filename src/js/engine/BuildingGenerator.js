@@ -19,7 +19,10 @@ var BuildingGenerator = function () {
 				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-dormer.png' }),
 				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-window.png' })
 			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' })
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' }),
+			chimney: [
+				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
+			]
 		},
 		thatch: {
 			keepShort: true,
@@ -28,7 +31,10 @@ var BuildingGenerator = function () {
 				new ImageSprite({ url: 'img/sprites/building-thatch-mid.png' }),
 				new ImageSprite({ url: 'img/sprites/building-thatch-mid-window.png' })
 			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-right.png' })
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-right.png' }),
+			chimney: [
+				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
+			]
 		},
 		thatchtudor: {
 			keepShort: true,
@@ -39,7 +45,10 @@ var BuildingGenerator = function () {
 				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-crossdown.png' }),
 				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-crossup.png' })
 			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-right.png' })
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-right.png' }),
+			chimney: [
+				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
+			]
 		}
 	};
 };
@@ -84,6 +93,7 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 
 		console.log('generate', block.position.x, block.position.y, block.size.x, block.size.y);
 
+		var chimneyProbability = 0.3;
 		_.times(buildingCount, function (i) {
 			var sprite = i === 0 ? sprites.buildingLeft :
 				i === buildingCount - 1 ? sprites.buildingRight :
@@ -95,6 +105,20 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 				size: { x: buildingWidth, y: buildingHeight }
 			});
 			entities.push(section);
+
+			var hasChimney = i > 0 && i < buildingCount - 1 && Math.random() < chimneyProbability;
+
+			if (hasChimney) {
+				var chimney = new Entity({
+					sprite: _.sample(sprites.chimney),
+					position: { x: x + i * buildingWidth, y: y + 30 },
+					size: { x: 19, y: 50 }
+				});
+				entities.push(chimney);
+				chimneyProbability = -0.2;
+			} else {
+				chimneyProbability += 0.45;
+			}
 		});
 
 		entities.forEach(function (entity) {
