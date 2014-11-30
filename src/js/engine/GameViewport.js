@@ -35,7 +35,14 @@ var GameViewport = function () {
 
 	this.cherry = 0;
 	this.level = 1;
+	this.drunkenness = 0;
 	window.game = this;
+
+	setInterval(function () {
+		if (that.drunkenness < that.level - 1) {
+			that.drunkenness += 0.03;
+		}
+	}, 300);
 
 	var sprites = this.sprites = {
 		sky: new RectangleSprite({
