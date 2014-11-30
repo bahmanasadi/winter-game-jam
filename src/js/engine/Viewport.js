@@ -1,8 +1,7 @@
 /* jshint node: true */
 'use strict';
 
-var _ = require('lodash'),
-	Generator = require('../generator.js');
+var _ = require('lodash');
 
 // Instances
 // GameUI
@@ -10,16 +9,19 @@ var _ = require('lodash'),
 // PauseUI
 var Viewport = function (attributes) {
 	_.extend(this, attributes);
-	this.layers = [];
+	this.layers = {};
+	this.pause = false;
+	this.gameover = false;
 };
 
 _.extend(Viewport.prototype, {
 	render: function (time, context) {
-		var collidedEntity = Generator.DetectCollision(this.entities.player, this.layers[3].entities);
-		if (collidedEntity) {
-			console.log("Collision Detected!!!!!! YOU LOST");
-		}
-		this.layers.forEach(function (layer) { layer.render(time, context); });
+		var that = this;
+		_.values(this.layers).forEach(function (layer) { 
+			layer.pause = that.pause;
+			layer.gameover = that.gameover;
+			layer.render(time, context); 
+		});
 	},
 	click: function () {}
 });

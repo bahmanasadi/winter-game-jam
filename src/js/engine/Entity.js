@@ -10,10 +10,11 @@ var Entity = function (attributes) {
 		acceleration: {x:0, y:0},
 		velocity: {x:0, y:0},
 		size: {x:0, y:0},
-		floorcollision: false,
+		type: undefined
 	}, attributes);
 };
 _.extend(Entity.prototype, {
+	types : {player:'player', other: 'other'},
 	render: function (time, context) {
 		var pos = this.absolute(context);
 		if (this.sprite) { this.sprite.render(context, pos); }
@@ -24,16 +25,13 @@ _.extend(Entity.prototype, {
 		this.position.y += (this.velocity.y || 0) * time;
 		this.velocity.x += (this.acceleration.x || 0) * time;
 		this.velocity.y += (this.acceleration.y || 0) * time;
-		if (this.floorcollision && (this.position.y-this.size.y/2) < 0) {
-			this.velocity.y = 0;
-		}
 	},
 	absolute: function (context) {
 		var sf = context.scaleFactor,
 			marginTop = context.marginTop;
 		return {
-			x: Math.round((this.position.x + this.layer.position.x - this.size.x / 2)) * sf,
-			y: marginTop + Math.round((160 - this.position.y + this.layer.position.y - this.size.y / 2)) * sf,
+			x: Math.round((this.position.x + this.layer.position.x - this.size.x / 2) * sf),
+			y: marginTop + Math.round((160 - this.position.y + this.layer.position.y - this.size.y / 2) * sf),
 			width: Math.round(this.size.x) * sf, 
 			height: Math.round(this.size.y) * sf
 		};

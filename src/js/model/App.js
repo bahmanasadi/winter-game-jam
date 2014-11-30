@@ -4,13 +4,16 @@
 var _ = require('lodash'),
 	GameViewport = require('../engine/GameViewport.js'),
 	Game = require('../model/Game.js'),
-	resources = require('../engine/resources.js');
+	BBPromise = require('bluebird'),
+	resources = require('../engine/resources.js'),
+	sound = require('../engine/sound.js');
 
 var App = function (attributes) {
 	_.extend(this, attributes);
 };
 _.extend(App.prototype, {
 	ui: undefined,
+	viewport: undefined,
 	setup: function () {
 		var that = this;
 		console.log('setup');
@@ -31,17 +34,30 @@ _.extend(App.prototype, {
 			if (that.viewport) { that.viewport.click(e.x, e.y); }
 		};
 
-		return resources.load([
-			'img/sprites/s_idle.png',
-			'img/sprites/s_run.png',
-			'img/sprites/s_jump.png',
-			'img/sprites/house1.png',
-			'img/sprites/cloud1.png',
-			'img/sprites/building-blue-roof-plaster-left.png',
-			'img/sprites/building-blue-roof-plaster-mid.png',
-			'img/sprites/building-blue-roof-plaster-mid-dormer.png',
-			'img/sprites/building-blue-roof-plaster-mid-window.png',
-			'img/sprites/building-blue-roof-plaster-right.png'
+		return BBPromise.all([
+			resources.load([
+				'img/sprites/s_idle.png',
+				'img/sprites/s_run.png',
+				'img/sprites/s_jump.png',
+				'img/sprites/house1.png',
+				'img/sprites/cloud1.png',
+				'img/sprites/building-blue-roof-plaster-left.png',
+				'img/sprites/building-blue-roof-plaster-mid.png',
+				'img/sprites/building-blue-roof-plaster-mid-dormer.png',
+				'img/sprites/building-blue-roof-plaster-mid-window.png',
+				'img/sprites/building-blue-roof-plaster-right.png',
+				'img/sprites/building-thatch-left.png',
+				'img/sprites/building-thatch-mid.png',
+				'img/sprites/building-thatch-mid-window.png',
+				'img/sprites/building-thatch-right.png'
+			]),
+			BBPromise.all([
+				sound.load('jump', 'sound/jump.wav'),
+				sound.load('point', 'sound/point.wav'),
+				sound.load('menu', 'sound/music/menu.mp3', true),
+				sound.load('game', 'sound/music/game.mp3', true),
+				sound.load('gameover', 'sound/music/gameover.mp3', true)
+			])
 		]).then(function () {
 			console.log('loaded resources');
 			that.render();
