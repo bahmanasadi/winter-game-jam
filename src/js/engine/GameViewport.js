@@ -43,6 +43,10 @@ var GameViewport = function () {
 		idle: new ImageSprite({
 			url: 'img/sprites/s_idle.png'
 		}),
+		moon: new ImageSprite({
+			url: 'img/sprites/moon.png',
+			rotation: 0.3
+		}),
 		run: new ImageSprite({
 			url: 'img/sprites/s_run.png',
 			animate: {
@@ -156,6 +160,11 @@ var GameViewport = function () {
 			position: { x: 128, y: 80 },
 			size: { x: 256, y: 160 }
 		}),
+		moon: new Entity({
+			sprite: sprites.moon,
+			position: { x: 220, y: 140 },
+			size: { x: 79, y: 78 }
+		}),
 		timeLeft: new Entity({
 			sprite: sprites.timeLeft,
 			position: { x: 128, y: 140 },
@@ -184,6 +193,7 @@ var GameViewport = function () {
 	};
 	
 	this.layers.sky.add(this.entities.sky);
+	that.layers.sky.add(this.entities.moon);
 	this.layers.fg.add(this.entities.player);
 	that.layers.ui.add(this.entities.timeLeft);
 	that.layers.ui.add(this.entities.pauseButton);

@@ -39,6 +39,7 @@ _.extend(App.prototype, {
 				'img/sprites/s_idle.png',
 				'img/sprites/s_run.png',
 				'img/sprites/s_jump.png',
+				'img/sprites/moon.png',
 				'img/sprites/house1.png',
 				'img/sprites/cloud1.png',
 				'img/sprites/building-blue-roof-plaster-left.png',

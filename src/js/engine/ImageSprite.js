@@ -25,13 +25,19 @@ _.extend(ImageSprite.prototype, Sprite.prototype, {
 	url: undefined,
 	animation : undefined,
 	render: function (context, pos) {
+		context.save();
+		context.translate(pos.x, pos.y);
+		if (this.rotation) {
+			context.rotate(this.rotation || 0);
+		}
 		if (this.animate) {
 			context.drawImage(this.image, 
 				this.currentFrame * this.animate.slice.x, 0, this.animate.slice.x, this.animate.slice.y,
-				pos.x, pos.y, pos.width, pos.height);
+				0, 0, pos.width, pos.height);
 		} else {
-			context.drawImage(this.image, pos.x, pos.y, pos.width, pos.height);
+			context.drawImage(this.image, 0, 0, pos.width, pos.height);
 		}
+		context.restore();
 	}
 });
 
