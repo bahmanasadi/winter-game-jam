@@ -30,7 +30,7 @@ _.extend(Entity.prototype, {
 	},
 
 	haze: function () {
-		return (window.game.level - 1) * (Math.max(0, this.position.x + this.layer.position.x - 160) / 80);
+		return (window.game.level - 1) * (Math.max(0, this.position.x - (this.size.x / 2) + this.layer.position.x - 60) / 60);
 	},
 	absolute: function (context) {
 		var sf = context.scaleFactor,
