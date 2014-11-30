@@ -3,7 +3,7 @@ Merry on Sherry
 
 ![Screenshot](https://raw.github.com/time-traveling-pineapple/winter-game-jam/master/merry_1.png)
 
-A side-scrolling drinking santa game.
+An HTML side-scrolling drinking santa game.
 
 Created for the Great British Winter Game Jam by Team Universally Challenged: Tommy Govan, Peter West and Bahman Asadi.
 
