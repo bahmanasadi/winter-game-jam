@@ -242,7 +242,7 @@ var GameViewport = function () {
 	that.layers.sky.add(this.entities.moon);
 	this.layers.fg.add(this.entities.player);
 	that.layers.ui.add(this.entities.timeLeft);
-	that.layers.ui.add(this.entities.pauseButton);
+	//that.layers.ui.add(this.entities.pauseButton);
 
 	this.buildingGenerator = new BuildingGenerator({
 		size: { x: 256, y: 160 },

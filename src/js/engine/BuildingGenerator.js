@@ -97,15 +97,17 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 	// A block consists of a left side, a number of mid parts and a right side
 	generateBlock: function (x) {
 		console.log('x', x);
-		x = Math.round(x + 32 + Math.random() * 32); // create a gap
+		x = Math.round(x + 16 + Math.random() * 32); // create a gap
 		var that = this,
 			buildingWidth = 64,
 			buildingHeight = 80,
 			entities = [],
 			sprites = _.sample(_.values(this.sprites)),
+			gameStart = x < 128,
 
+			buildingCountMin = gameStart ? 6 : 2,
 			buildingCountMax = sprites.keepShort ? 2 : 8, // shorter thatch
-			buildingCount = Math.round(2 + Math.random() * buildingCountMax),
+			buildingCount = Math.round(buildingCountMin + Math.random() * buildingCountMax),
 			width = buildingCount * buildingWidth,
 			y = buildingHeight / 2 - Math.round(3 + Math.random() * 20);
 		
@@ -126,12 +128,12 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 
 			var section = new Entity({
 				sprite: sprite,
-				position: { x: x + i * buildingWidth, y: y },
+				position: { x: x + i * buildingWidth - i, y: y },
 				size: { x: buildingWidth, y: buildingHeight }
 			});
 			entities.push(section);
 
-			var hasChimney = i > 0 && i < buildingCount - 1 && midIndex === 0 && Math.random() < chimneyProbability;
+			var hasChimney = !gameStart && i > 0 && i < buildingCount - 1 && midIndex === 0 && Math.random() < chimneyProbability;
 
 			if (hasChimney) {
 				var pos = { x: x + i * buildingWidth, y: y + 30 + _.random(0, 10) };
