@@ -10,21 +10,33 @@ var BuildingGenerator = function () {
 	Generator.apply(this, arguments);
 	this.generatedEntities = [];
 	this.blocks = [];
-			
-	this.sprites = {
-		plaster: {
-			buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-left.png' }),
+	
+	this.sprites = [
+		{
+			buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-left.png' }),
 			buildingMid: [
-				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid.png' }),
-				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-dormer.png' }),
-				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-window.png' })
+				new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-mid.png' }),
+				new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-mid-window.png' })
 			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' }),
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-right.png' }),
 			chimney: [
-				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
+				new ImageSprite({ url: 'img/sprites/chimney-brick1.png' }),
+				new ImageSprite({ url: 'img/sprites/chimney-brick2.png' })
 			]
 		},
-		thatch: {
+		{
+			buildingLeft: new ImageSprite({ url: 'img/sprites/building-red-roof-brick-left.png' }),
+			buildingMid: [
+				new ImageSprite({ url: 'img/sprites/building-red-roof-brick-mid.png', }),
+				new ImageSprite({ url: 'img/sprites/building-red-roof-brick-mid-window.png' })
+			],
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-red-roof-brick-right.png' }),
+			chimney: [
+				new ImageSprite({ url: 'img/sprites/chimney-brick1.png' }),
+				new ImageSprite({ url: 'img/sprites/chimney-brick2.png' })
+			]
+		},
+		{
 			keepShort: true,
 			buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-left.png' }),
 			buildingMid: [
@@ -36,7 +48,19 @@ var BuildingGenerator = function () {
 				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
 			]
 		},
-		thatchtudor: {
+		{
+			buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-left.png' }),
+			buildingMid: [
+				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid.png' }),
+				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-dormer.png' }),
+				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-window.png' })
+			],
+			buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' }),
+			chimney: [
+				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
+			]
+		},
+		{
 			keepShort: true,
 			buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-left.png' }),
 			buildingMid: [
@@ -50,7 +74,7 @@ var BuildingGenerator = function () {
 				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
 			]
 		}
-	};
+	];
 };
 _.extend(BuildingGenerator.prototype, Generator.prototype, {
 	animate: _.throttle(function () {
@@ -77,8 +101,7 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 			buildingWidth = 64,
 			buildingHeight = 80,
 			entities = [],
-			type = _.sample(_.keys(this.sprites)),
-			sprites = this.sprites[type],
+			sprites = _.sample(_.values(this.sprites)),
 
 			buildingCountMax = sprites.keepShort ? 2 : 8, // shorter thatch
 			buildingCount = Math.round(2 + Math.random() * buildingCountMax),
@@ -95,9 +118,10 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 
 		var chimneyProbability = 0.3;
 		_.times(buildingCount, function (i) {
-			var sprite = i === 0 ? sprites.buildingLeft :
+			var midIndex = Math.random() < 0.4 ? 0 : _.random(0, sprites.buildingMid.length - 1),
+				sprite = i === 0 ? sprites.buildingLeft :
 				i === buildingCount - 1 ? sprites.buildingRight :
-				_.sample(sprites.buildingMid);
+				sprites.buildingMid[midIndex];
 
 			var section = new Entity({
 				sprite: sprite,
@@ -106,7 +130,7 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 			});
 			entities.push(section);
 
-			var hasChimney = i > 0 && i < buildingCount - 1 && Math.random() < chimneyProbability;
+			var hasChimney = i > 0 && i < buildingCount - 1 && midIndex === 0 && Math.random() < chimneyProbability;
 
 			if (hasChimney) {
 				var chimney = new Entity({
