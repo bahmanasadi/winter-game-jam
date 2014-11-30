@@ -53,7 +53,20 @@ var GameViewport = function () {
 		timeLeft: new TextSprite({
 			text: '01:00',
 			fill: 'white'
+		}),
+		gameover: new TextSprite({
+			text: 'Game Over',
+			fill: 'white'
+		}),
+		paused: new TextSprite({
+			text: 'Puased',
+			fill: 'white'
+		}),
+		pauseButton: new TextSprite({
+			text: 'Pause',
+			fill: 'white'
 		})
+
 		
 		//jump: new Sprite({}),
 		//tumble: new Sprite({})
@@ -68,12 +81,24 @@ var GameViewport = function () {
 		}
 		return n;
 	};
+
+	// Game Timer
 	var startTime = Date.now();
-	setInterval(function () {
+	var gameTimer = function () {
+		if (that.pause || that.gameover) {
+			clearInterval(timeIntervalID);
+		}
 		var duration = moment.duration(Date.now() - startTime, 'ms');
 		sprites.timeLeft.text = pad(duration.minutes(), 2) + ':' + pad(duration.seconds(), 2) + '.' + pad(duration.milliseconds(), 1);
-	}, 100);
+	};
+	var timeIntervalID;
 
+	this.resumeGameTime = function () {
+		timeIntervalID = setInterval(gameTimer, 100);
+	};
+	this.resumeGameTime();
+
+	// Speeds and layers
 	var baseSpeed = 100,
 		baseAcceleration = 0.1;
 	this.layers = [
@@ -135,6 +160,21 @@ var GameViewport = function () {
 			sprite: sprites.timeLeft,
 			position: { x: 128, y: 140 },
 			size: { x: 0, y: 0 }
+		}),
+		gameover: new Entity({
+			sprite: sprites.gameover,
+			position: { x: 128, y: 80 },
+			size: { x: 0, y: 0 }
+		}),
+		paused: new Entity({
+			sprite: sprites.paused,
+			position: { x: 128, y: 80 },
+			size: { x: 0, y: 0 }
+		}),
+		pauseButton: new Entity({
+			sprite: sprites.pauseButton,
+			position: { x: 40, y: 140 },
+			size: { x: 0, y: 0 }
 		})
 	};
 	
@@ -158,6 +198,7 @@ var GameViewport = function () {
 	});
 
 	that.layers[4].add(this.entities.timeLeft);
+	that.layers[4].add(this.entities.pauseButton);
 
 	this.buildingGenerator = new BuildingGenerator({
 		size: { x: 256, y: 160 }
@@ -174,10 +215,20 @@ var GameViewport = function () {
 
 
 _.extend(GameViewport.prototype, Viewport.prototype, {
-	click: function () {
-		console.log('jump!');
-		this.entities.player.velocity.y = 150;
-		this.entities.player.sprite = this.sprites.jump;
+	click: function (x, y) {
+		if (x>0 && x<75 && y>0 && y<40) {
+			if (!this.pause) {
+				this.layers[4].add(this.entities.paused);
+			} else {
+				this.layers[4].remove(this.entities.paused);
+				this.resumeGameTime();
+			}
+			this.pause = !this.pause;
+		} else {
+			console.log('jump!', x, y);
+			this.entities.player.velocity.y = 150;
+			this.entities.player.sprite = this.sprites.jump;
+		}
 	},
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
@@ -191,6 +242,7 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 				this.entities.player.velocity.y = -100;
 				this.entities.player.velocity.x = 0;
 				this.gameover = true;
+				this.layers[4].add(this.entities.gameover);
 			} else {
 				this.entities.player.sprite = this.sprites.run;
 				this.entities.player.velocity.y = 0;

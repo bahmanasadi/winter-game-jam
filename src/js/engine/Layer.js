@@ -36,6 +36,10 @@ _.extend(Layer.prototype, Entity.prototype, {
 	add: function (entity) {
 		entity.layer = this;
 		this.entities.push(entity);
+	},
+	remove: function (entity) {
+		entity.layer = undefined;
+		_.remove(this.entities, function (e) { return e == entity; } );
 	}
 });
 
