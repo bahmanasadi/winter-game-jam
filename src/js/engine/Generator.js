@@ -35,16 +35,19 @@ _.extend(Generator.prototype, Entity.prototype, {
 		console.log('block', x1, y1);
 		_.times(Math.round(that.entityCount.min + Math.random() * (that.entityCount.max - that.entityCount.min)), function () {
 			var x = Math.round(x1 + Math.random() * that.blockSize.x),
-				y = Math.round(y1 + Math.random() * that.size.y),
-				sprite = _.sample(that.sprites);
-			var entity = new Entity({
-				sprite: sprite,
-				size: that.entitySize,
-				position: { x: x, y: y }
-			});
-			that.layer.add(entity);
+				y = Math.round(y1 + Math.random() * that.size.y);
+			that.generateEntity(x, y);
 		});
 		this.blocks.push(block);
+	},
+	generateEntity: function (x, y) {
+		var entity = new Entity({
+			sprite: _.sample(this.sprites),
+			size: this.entitySize,
+			position: { x: x, y: y }
+		});
+		this.layer.add(entity);
+		return entity;
 	}
 });
 

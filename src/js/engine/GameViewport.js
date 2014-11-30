@@ -12,6 +12,7 @@ var _ = require('lodash'),
 	utils = require('../utils.js'),
 	Generator = require('../engine/Generator.js'),
 	BuildingGenerator = require('../engine/BuildingGenerator.js'),
+	CloudGenerator = require('../engine/CloudGenerator.js'),
 	moment = require('moment'),
 	sound = require('../engine/sound');
 
@@ -65,21 +66,34 @@ var GameViewport = function () {
 		house1: new ImageSprite({
 			url: 'img/sprites/house1.png'
 		}),
-		cloudLarge1: new ImageSprite({
-			url: 'img/sprites/cloud-large1.png'
-		}),
-		cloudLarge2: new ImageSprite({
-			url: 'img/sprites/cloud-large2.png'
-		}),
-		cloudSmall1: new ImageSprite({
-			url: 'img/sprites/cloud-small1.png'
-		}),
-		cloudSmall2: new ImageSprite({
-			url: 'img/sprites/cloud-small2.png'
-		}),
-		cloudSmall3: new ImageSprite({
-			url: 'img/sprites/cloud-small3.png'
-		}),
+		cloud: {
+			large: [
+				new ImageSprite({ url: 'img/sprites/cloud-large1.png' }),
+				new ImageSprite({ url: 'img/sprites/cloud-large2.png' })
+			],
+			small: [
+				new ImageSprite({ url: 'img/sprites/cloud-small1.png' }),
+				new ImageSprite({ url: 'img/sprites/cloud-small2.png' }),
+				new ImageSprite({ url: 'img/sprites/cloud-small3.png' })
+			]
+		},
+		cloudFace: {
+			large: {
+				happyPleased: new ImageSprite({ url: 'img/sprites/cloud-large-face-happy-pleased.png' }),
+				happySmiley: new ImageSprite({ url: 'img/sprites/cloud-large-face-happy-smiley.png' }),
+				ouchOoo: new ImageSprite({ url: 'img/sprites/cloud-large-face-ouch-ooo.png' }),
+				ouchSad: new ImageSprite({ url: 'img/sprites/cloud-large-face-ouch-sad.png' }),
+				ouchShock: new ImageSprite({ url: 'img/sprites/cloud-large-face-ouch-shock.png' })
+			},
+			small: {
+				happyPleased: new ImageSprite({ url: 'img/sprites/cloud-large-face-happy-pleased.png' }),
+				happySmiley: new ImageSprite({ url: 'img/sprites/cloud-large-face-happy-smiley.png' }),
+				ouchOoo: new ImageSprite({ url: 'img/sprites/cloud-large-face-ouch-ooo.png' }),
+				ouchSad: new ImageSprite({ url: 'img/sprites/cloud-large-face-ouch-sad.png' }),
+				ouchShock: new ImageSprite({ url: 'img/sprites/cloud-large-face-ouch-shock.png' })
+			},
+		},
+		
 		timeLeft: new TextSprite({
 			text: '01:00',
 			fill: 'white'
@@ -246,20 +260,21 @@ var GameViewport = function () {
 	});
 	that.layers.sky.add(this.starGenerator);
 
-	this.cloudGenerator1 = new Generator({
+	this.cloudGenerator1 = new CloudGenerator({
 		size: { x: 256, y: 100 },
 		position: { x: 128, y: 130 },
-		sprites: [sprites.cloudLarge1, sprites.cloudLarge2],
+		sprites: sprites.cloud.large,
+		faceSprites: sprites.cloudFace.large,
 		blockSize: { x: 128 },
 		entityCount: { min: 0, max: 2 }
 	});
 	that.layers.bgFar.add(this.cloudGenerator1);
 
-	this.cloudGenerator2 = new Generator({
+	this.cloudGenerator2 = new CloudGenerator({
 		size: { x: 256, y: 100 },
 		position: { x: 128, y: 130 },
-		sprites: [sprites.cloudSmall1, sprites.cloudSmall2, sprites.cloudSmall3],
-		//entitySize: { x: 46, y: 24 },
+		sprites: sprites.cloud.small,
+		faceSprites: sprites.cloudFace.small,
 		blockSize: { x: 128 },
 		entityCount: { min: 0, max: 2 }
 	});
@@ -314,8 +329,22 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 						that.sprites.chimneyFace.ouchOoo,
 						that.sprites.chimneyFace.ouchSad,
 						that.sprites.chimneyFace.ouchShock
-					])
-				})
+					]);
+				});
+				this.cloudGenerator1.faces.forEach(function (face) {
+					face.sprite = _.sample([
+						that.sprites.cloudFace.large.ouchOoo, 
+						that.sprites.cloudFace.large.ouchSad,
+						that.sprites.cloudFace.large.ouchShock
+					]);
+				});
+				this.cloudGenerator2.faces.forEach(function (face) {
+					face.sprite = _.sample([
+						that.sprites.cloudFace.small.ouchOoo, 
+						that.sprites.cloudFace.small.ouchSad,
+						that.sprites.cloudFace.small.ouchShock
+					]);
+				});
 				//this.entities.score.sprite.text = 'Score: ' + (this.game.player.score-1);
 				//this.layers[4].add(this.entities.score);
 			} else {

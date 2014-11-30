@@ -20,7 +20,7 @@ var resources = {
 				resolve(img);
 			};
 			img.onerror = function () {
-				reject();
+				reject('url not found ' + url);
 			};
 			img.src = url;
 		});
