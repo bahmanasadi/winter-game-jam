@@ -30,12 +30,12 @@ _.extend(Entity.prototype, {
 	},
 
 	haze: function () {
-		return (window.game.level - 1) * (Math.max(0, this.position.x - (this.size.x / 2) + this.layer.position.x - 60) / 60);
+		return (window.game.level - 1) * (Math.max(0, this.position.x - (this.size.x / 2) + this.layer.position.x - 60 + (window.game.level * 40)) / 60);
 	},
 	absolute: function (context) {
 		var sf = context.scaleFactor,
 			marginTop = context.marginTop,
-			haze = this.haze();
+			haze = window.game.gameover ? 0 : this.haze();
 		return {
 			x: Math.round((this.position.x + this.layer.position.x - this.size.x / 2 + _.random(-haze, haze)) * sf),
 			y: marginTop + Math.round((160 - this.position.y + this.layer.position.y - this.size.y / 2  + _.random(-haze, haze)) * sf),

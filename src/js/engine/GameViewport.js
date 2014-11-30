@@ -194,7 +194,7 @@ var GameViewport = function () {
 
 	// Speeds and layers
 	var baseSpeed = 100,
-		baseAcceleration = 0.1;
+		baseAcceleration = 1;
 
 	this.layers.sky = new Layer({
 		position: { x: 0, y: 0 }
