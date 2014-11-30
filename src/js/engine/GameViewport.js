@@ -26,6 +26,18 @@ var GameViewport = function () {
 		sky: new RectangleSprite({
 			fill: '#0B4B97'
 		}),
+		star1: new RectangleSprite({
+			fill: '#FFFFFF'
+		}),
+		star2: new RectangleSprite({
+			fill: '#1F61B0'
+		}),
+		star3: new RectangleSprite({
+			fill: '#CCCCCC'
+		}),
+		star4: new RectangleSprite({
+			fill: '#EEEEEE'
+		}),
 		idle: new ImageSprite({
 			url: 'img/sprites/s_idle.png'
 		}),
@@ -76,46 +88,29 @@ var GameViewport = function () {
 
 	var baseSpeed = 100,
 		baseAcceleration = 0.1;
-	this.layers = [
-		new Layer({
-			position: { x: 0, y: 0 }
-		}), // sky
-		new Layer({
-			position: { x: 0, y: 0 },
-			velocity: { x: -baseSpeed / 8 },
-			acceleration: { x: -baseAcceleration / 8 }
-		}), // clouds
-		new Layer({
-			position: { x: 0, y: 0 },
-			velocity: { x: -baseSpeed / 4 },
-			acceleration: { x: -baseAcceleration / 4 }
-		}), // background -- landmarks
-		new Layer({
-			position: { x: 0, y: 0 },
-			velocity: { x: -baseSpeed },
-			acceleration: { x: -baseAcceleration }
-		}), // foreground -- player + obstacles
-		new Layer({
-			position: { x: 0, y: 0 }
-		}) // ui
-	];
 
+	this.layers.sky = new Layer({
+		position: { x: 0, y: 0 }
+	}); // sky
+	this.layers.bgFar = new Layer({
+		position: { x: 0, y: 0 },
+		velocity: { x: -baseSpeed / 8 },
+		acceleration: { x: -baseAcceleration / 8 }
+	}); // clouds
+	this.layers.bgClose = new Layer({
+		position: { x: 0, y: 0 },
+		velocity: { x: -baseSpeed / 4 },
+		acceleration: { x: -baseAcceleration / 4 }
+	}); // background -- landmarks
+	this.layers.fg = new Layer({
+		position: { x: 0, y: 0 },
+		velocity: { x: -baseSpeed },
+		acceleration: { x: -baseAcceleration }
+	}); // foreground -- player + obstacles
+	this.layers.ui = new Layer({
+		position: { x: 0, y: 0 }
+	}); // ui
 
-	var eHouse = new Entity({
-		sprite: sprites.house1,
-		position: {x: 25, y: 60},
-		size: {x: 50, y: 44}
-	});
-
-	var eCloud = new Entity({
-		sprite: sprites.cloud1,
-		position: {x: 25, y: 100},
-		size: {x: 50, y: 15}
-	});
-	
-	// this.layers[3].entities.push(eCloud);
-	// this.layers[3].entities.push(eHouse);
-	// this.layers[3].entities.push(ePlayer);
 	this.entities = {
 		player: new Entity({
 			sprite: sprites.run,
@@ -137,38 +132,41 @@ var GameViewport = function () {
 		})
 	};
 	
-	this.layers[0].add(this.entities.sky);
-	this.layers[3].add(this.entities.player);
-
-	var obstacles = utils.generateEntity([sprites.house1], 1000.0);
-	_.each(obstacles, function (entity) {
-		//that.layers[3].add(entity);
-	});
-	console.log(obstacles);
-
-	var clouds = utils.generateEntity([sprites.cloud1], 1000.0, 160);
-	_.each(clouds, function (entity) {
-		that.layers[2].add(entity);
-	});
-
-	var clouds2 = utils.generateEntity([sprites.cloud1], 1000.0, 160);
-	_.each(clouds2, function (entity) {
-		that.layers[1].add(entity);
-	});
-
-	that.layers[4].add(this.entities.timeLeft);
+	this.layers.sky.add(this.entities.sky);
+	this.layers.fg.add(this.entities.player);
+	that.layers.ui.add(this.entities.timeLeft);
 
 	this.buildingGenerator = new BuildingGenerator({
 		size: { x: 256, y: 160 }
-		//velocity: { x: baseSpeed },
-		//acceleration: { x: baseAcceleration }
 	});
-	that.layers[3].add(this.buildingGenerator);
+	that.layers.fg.add(this.buildingGenerator);
 
 	this.starGenerator = new Generator({
-		size: { x: 256, y: 160 }
+		size: { x: 256, y: 160 },
+		sprites: [sprites.star1, sprites.star2, sprites.star3, sprites.star4],
+		entitySize: { x: 1, y: 1 },
+		blockSize: { x: 5 },
+		entityCount: { min: 13, max: 18 }
 	});
-	that.layers[1].add(this.starGenerator);
+	that.layers.sky.add(this.starGenerator);
+
+	this.cloudGenerator1 = new Generator({
+		size: { x: 256, y: 160 },
+		sprites: [sprites.cloud1],
+		entitySize: { x: 78, y: 40 },
+		blockSize: { x: 256 },
+		entityCount: { min: 3, max: 8 }
+	});
+	that.layers.bgFar.add(this.cloudGenerator1);
+
+	this.cloudGenerator2 = new Generator({
+		size: { x: 256, y: 160 },
+		sprites: [sprites.cloud1],
+		entitySize: { x: 46, y: 24 },
+		blockSize: { x: 256 },
+		entityCount: { min: 3, max: 8 }
+	});
+	that.layers.bgClose.add(this.cloudGenerator2);
 };
 
 
@@ -181,7 +179,7 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
 
-		var collidedEntity = utils.detectCollision(this.entities.player, this.layers[3].entities);
+		var collidedEntity = utils.detectCollision(this.entities.player, this.layers.fg.entities);
 		if (collidedEntity) {
 			this.entities.player.velocity.y = 0;
 			this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;

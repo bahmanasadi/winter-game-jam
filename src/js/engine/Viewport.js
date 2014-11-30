@@ -9,12 +9,12 @@ var _ = require('lodash');
 // PauseUI
 var Viewport = function (attributes) {
 	_.extend(this, attributes);
-	this.layers = [];
+	this.layers = {};
 };
 
 _.extend(Viewport.prototype, {
 	render: function (time, context) {
-		this.layers.forEach(function (layer) { layer.render(time, context); });
+		_.values(this.layers).forEach(function (layer) { layer.render(time, context); });
 	},
 	click: function () {}
 });
