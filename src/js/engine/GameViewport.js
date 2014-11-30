@@ -123,6 +123,11 @@ var GameViewport = function () {
 			fill: 'white',
 			shadow: true
 		}),
+		f5: new TextSprite({
+			text: 'F5 to restart',
+			fill: 'white',
+			shadow: true
+		}),
 		levelNotice: new TextSprite({
 			text: '',
 			fill: 'white',
@@ -259,6 +264,11 @@ var GameViewport = function () {
 			position: { x: 128, y: 120 },
 			size: { x: 0, y: 0 }
 		}),
+		f5: new Entity({
+			sprite: sprites.f5,
+			position: { x: 128, y: 100 },
+			size: { x: 0, y: 0 }
+		}),
 		levelNotice: new Entity({
 			sprite: sprites.levelNotice,
 			position: { x: 128, y: 120 },
@@ -391,6 +401,7 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 				this.gameover = true;
 				sound.music('gameover');
 				this.layers.ui.add(this.entities.gameover);
+				this.layers.ui.add(this.entities.f5);
 				this.buildingGenerator.chimneys.forEach(function (chimney) {
 					chimney.face.sprite = _.sample([
 						that.sprites.chimneyFace.ouchOoo,
