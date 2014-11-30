@@ -234,9 +234,13 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 			}
 			this.pause = !this.pause;
 		} else {
-			console.log('jump!', x, y);
-			this.entities.player.velocity.y = 150;
-			this.entities.player.sprite = this.sprites.jump;
+			// Jump only if velocity is less than 10 (not in a jump motion).
+			// Volecity is changing constantly but is less than 10
+			if (Math.abs(this.entities.player.velocity.y) < 10) {
+				console.log('jump!', x, y);
+				this.entities.player.velocity.y = 150;
+				this.entities.player.sprite = this.sprites.jump;
+			}
 		}
 	},
 	render: function () {
