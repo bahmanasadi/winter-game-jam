@@ -14,8 +14,10 @@ _.extend(TextSprite.prototype, Sprite.prototype, {
 	text: '',
 	render: function (context, pos) {
 		context.font = (12 * context.scaleFactor) + 'px "Press Start 2P"';
+		context.textAlign = 'center';
+		context.fillStyle = 'black';
+		context.fillText(this.text, pos.x + context.scaleFactor, pos.y + context.scaleFactor);
 		context.fillStyle = this.fill;
-		context.textAlign = 'center'; 
 		context.fillText(this.text, pos.x, pos.y);
 	}
 });

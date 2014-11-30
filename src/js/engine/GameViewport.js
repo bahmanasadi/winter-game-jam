@@ -19,7 +19,7 @@ var _ = require('lodash'),
 // PauseUI
 var GameViewport = function () {
 	Viewport.apply(this, arguments); // super()
-
+	console.log(this.game.player);
 	var that = this;
 
 	var sprites = this.sprites = {
@@ -65,7 +65,24 @@ var GameViewport = function () {
 		timeLeft: new TextSprite({
 			text: '01:00',
 			fill: 'white'
+		}),
+		gameover: new TextSprite({
+			text: 'Game Over',
+			fill: 'white'
+		}),
+		score: new TextSprite({
+			text: 'Score',
+			fill: 'white'
+		}),
+		paused: new TextSprite({
+			text: 'Puased',
+			fill: 'white'
+		}),
+		pauseButton: new TextSprite({
+			text: 'Pause',
+			fill: 'white'
 		})
+
 		
 		//jump: new Sprite({}),
 		//tumble: new Sprite({})
@@ -80,12 +97,24 @@ var GameViewport = function () {
 		}
 		return n;
 	};
+
+	// Game Timer
 	var startTime = Date.now();
-	setInterval(function () {
+	var gameTimer = function () {
+		if (that.pause || that.gameover) {
+			clearInterval(timeIntervalID);
+		}
 		var duration = moment.duration(Date.now() - startTime, 'ms');
 		sprites.timeLeft.text = pad(duration.minutes(), 2) + ':' + pad(duration.seconds(), 2) + '.' + pad(duration.milliseconds(), 1);
-	}, 100);
+	};
+	var timeIntervalID;
 
+	this.resumeGameTime = function () {
+		timeIntervalID = setInterval(gameTimer, 100);
+	};
+	this.resumeGameTime();
+
+	// Speeds and layers
 	var baseSpeed = 100,
 		baseAcceleration = 0.1;
 
@@ -118,7 +147,7 @@ var GameViewport = function () {
 			size: { x: 18, y: 32 },
 			acceleration: { x: baseAcceleration, y: -300 },
 			velocity: { x: baseSpeed, y: 0 },
-			floorcollision: true
+			type: Entity.prototype.types.player
 		}),
 		sky: new Entity({
 			sprite: sprites.sky,
@@ -129,12 +158,33 @@ var GameViewport = function () {
 			sprite: sprites.timeLeft,
 			position: { x: 128, y: 140 },
 			size: { x: 0, y: 0 }
+		}),
+		gameover: new Entity({
+			sprite: sprites.gameover,
+			position: { x: 128, y: 80 },
+			size: { x: 0, y: 0 }
+		}),
+		score: new Entity({
+			sprite: sprites.score,
+			position: { x: 128, y: 60 },
+			size: { x: 0, y: 0 }
+		}),
+		paused: new Entity({
+			sprite: sprites.paused,
+			position: { x: 128, y: 80 },
+			size: { x: 0, y: 0 }
+		}),
+		pauseButton: new Entity({
+			sprite: sprites.pauseButton,
+			position: { x: 40, y: 140 },
+			size: { x: 0, y: 0 }
 		})
 	};
 	
 	this.layers.sky.add(this.entities.sky);
 	this.layers.fg.add(this.entities.player);
 	that.layers.ui.add(this.entities.timeLeft);
+	that.layers.ui.add(this.entities.pauseButton);
 
 	this.buildingGenerator = new BuildingGenerator({
 		size: { x: 256, y: 160 }
@@ -171,25 +221,55 @@ var GameViewport = function () {
 
 
 _.extend(GameViewport.prototype, Viewport.prototype, {
-	click: function () {
-		console.log('jump!');
-		this.entities.player.velocity.y = 150;
-		this.entities.player.sprite = this.sprites.jump;
+	click: function (x, y) {
+		if (x>0 && x<75 && y>0 && y<40) {
+			if (!this.pause) {
+				this.layers[4].add(this.entities.paused);
+			} else {
+				this.layers[4].remove(this.entities.paused);
+				this.resumeGameTime();
+			}
+			this.pause = !this.pause;
+		} else {
+			// Jump only if velocity is less than 10 (not in a jump motion).
+			// Volecity is changing constantly but is less than 10
+			if (Math.abs(this.entities.player.velocity.y) < 10) {
+				console.log('jump!', x, y);
+				this.entities.player.velocity.y = 150;
+				this.entities.player.sprite = this.sprites.jump;
+			}
+		}
 	},
 	render: function () {
 		Viewport.prototype.render.apply(this, arguments);
 
-		var collidedEntity = utils.detectVerticalCollision(this.entities.player, this.layers.fg.entities);
+
+		//var collidedEntity = utils.detectVerticalCollision(this.entities.player, this.layers.fg.entities);
+
+		var collidedEntity = utils.detectCollision(this.entities.player, this.layers.fg.entities);
+
 		if (collidedEntity) {
+			var playerY = Math.ceil(this.entities.player.position.y);
+			var collidedEntityY = collidedEntity.position.y + collidedEntity.size.y / 2.0 + this.entities.player.size.y / 2.0 ;
+			if (Math.abs(collidedEntityY - playerY)  > 5 ) {
+				this.entities.player.sprite = this.sprites.idle;
+				this.entities.player.velocity.y = -100;
+				this.entities.player.velocity.x = 0;
+				this.gameover = true;
+				this.layers.ui.add(this.entities.gameover);
+				//this.entities.score.sprite.text = 'Score: ' + (this.game.player.score-1);
+				//this.layers[4].add(this.entities.score);
+			} else {
+				this.entities.player.sprite = this.sprites.run;
+				this.entities.player.velocity.y = 0;
+				this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;				
+			}
+		} else if ((this.entities.player.position.y-this.entities.player.size.y/2) < 5) {
+			// Floor collision
+			this.entities.player.sprite = this.sprites.run;
 			this.entities.player.velocity.y = 0;
-			this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;
+			//this.entities.player.position.y = collidedEntity.position.y + collidedEntity.size.y / 2 + this.entities.player.size.y / 2;
 			console.log('Collision with ground');
-		}
-		collidedEntity = utils.detectHorizontalCollision(this.entities.player, this.layers.fg.entities);
-		if (collidedEntity) {
-			//this.entities.player.velocity.x = 0;
-			//this.entities.player.position.x = collidedEntity.position.x + collidedEntity.size.x / 2 + this.entities.player.size.x / 2;
-			console.log('Collision Detected!!!!!! YOU LOST');
 		}
 
 	}

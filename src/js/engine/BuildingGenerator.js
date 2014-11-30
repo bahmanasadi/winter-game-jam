@@ -53,6 +53,8 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 		}*/
 		if (last && last.position.x + last.size.x / 2 < -this.layer.position.x + this.size.x / 2 + 256) {
 			this.generateBlock(last.position.x + last.size.x / 2);
+			//this.player.score++;
+			console.log('score++')
 		}
 	}, 100),
 	// A block consists of a left side, a number of mid parts and a right side
