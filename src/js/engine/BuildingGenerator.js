@@ -134,12 +134,18 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 			var hasChimney = i > 0 && i < buildingCount - 1 && midIndex === 0 && Math.random() < chimneyProbability;
 
 			if (hasChimney) {
+				var pos = { x: x + i * buildingWidth, y: y + 30 + _.random(0, 10) };
+				var chimneyFace = new Entity({
+					sprite: that.chimneyFaceSprites.sleep,
+					position: pos
+				});
 				var chimney = new Entity({
 					sprite: _.sample(sprites.chimney),
-					position: { x: x + i * buildingWidth, y: y + 30 },
-					size: { x: 19, y: 50 },
+					position: pos,
+					face: chimneyFace
 				});
 				entities.push(chimney);
+				entities.push(chimneyFace);
 				that.chimneys.push(chimney);
 				chimneyProbability = -0.2;
 			} else {

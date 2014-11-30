@@ -93,7 +93,16 @@ var GameViewport = function () {
 			new ImageSprite({ url: 'img/sprites/gift2.png' }),
 			new ImageSprite({ url: 'img/sprites/gift3.png' }),
 			new ImageSprite({ url: 'img/sprites/gift4.png' })
-		]
+		],
+		chimneyFace: {
+			happyPleased: new ImageSprite({ url: 'img/sprites/chimney-face-happy-pleased.png' }),
+			happySmiley: new ImageSprite({ url: 'img/sprites/chimney-face-happy-smiley.png' }),
+			ouchOoo: new ImageSprite({ url: 'img/sprites/chimney-face-ouch-ooo.png' }),
+			ouchSad: new ImageSprite({ url: 'img/sprites/chimney-face-ouch-sad.png' }),
+			ouchShock: new ImageSprite({ url: 'img/sprites/chimney-face-ouch-shock.png' }),
+			sleep: new ImageSprite({ url: 'img/sprites/chimney-face-sleep.png' }),
+			surprised: new ImageSprite({ url: 'img/sprites/chimney-face-surprised.png' })
+		}
 
 		
 		//jump: new Sprite({}),
@@ -210,7 +219,8 @@ var GameViewport = function () {
 	that.layers.ui.add(this.entities.pauseButton);
 
 	this.buildingGenerator = new BuildingGenerator({
-		size: { x: 256, y: 160 }
+		size: { x: 256, y: 160 },
+		chimneyFaceSprites: sprites.chimneyFace
 	});
 	that.layers.fg.add(this.buildingGenerator);
 
@@ -266,8 +276,9 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 		}
 	},
 	render: function () {
+		var that = this;
 		Viewport.prototype.render.apply(this, arguments);
-
+		if (this.gameover) { return; }
 
 		//var collidedEntity = utils.detectVerticalCollision(this.entities.player, this.layers.fg.entities);
 
@@ -283,6 +294,13 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 				this.gameover = true;
 				sound.music('gameover');
 				this.layers.ui.add(this.entities.gameover);
+				this.buildingGenerator.chimneys.forEach(function (chimney) {
+					chimney.face.sprite = _.sample([
+						that.sprites.chimneyFace.ouchOoo,
+						that.sprites.chimneyFace.ouchSad,
+						that.sprites.chimneyFace.ouchShock
+					])
+				})
 				//this.entities.score.sprite.text = 'Score: ' + (this.game.player.score-1);
 				//this.layers[4].add(this.entities.score);
 			} else {
@@ -309,6 +327,10 @@ _.extend(GameViewport.prototype, Viewport.prototype, {
 				acceleration: { x: 0, y: -300 } 
 			});
 			this.layers.fg2.add(present);
+			chimneyJumped.face.sprite = this.sprites.chimneyFace.surprised;
+			setTimeout(function () {
+				chimneyJumped.face.sprite = _.sample([ that.sprites.chimneyFace.happyPleased, that.sprites.chimneyFace.happySmiley ]);
+			}, 400);
 		}
 
 	}

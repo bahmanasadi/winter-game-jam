@@ -77,7 +77,14 @@ _.extend(App.prototype, {
 				'img/sprites/gift1.png',
 				'img/sprites/gift2.png',
 				'img/sprites/gift3.png',
-				'img/sprites/gift4.png'
+				'img/sprites/gift4.png',
+				'img/sprites/chimney-face-happy-pleased.png',
+				'img/sprites/chimney-face-happy-smiley.png',
+				'img/sprites/chimney-face-ouch-ooo.png',
+				'img/sprites/chimney-face-ouch-sad.png',
+				'img/sprites/chimney-face-ouch-shock.png',
+				'img/sprites/chimney-face-sleep.png',
+				'img/sprites/chimney-face-surprised.png'
 			]),
 			BBPromise.all([
 				sound.load('jump', 'sound/jump.wav'),
