@@ -3,6 +3,7 @@
 
 var _ = require('lodash'),
 	GameViewport = require('../engine/GameViewport.js'),
+	MenuViewport = require('../engine/MenuViewport.js'),
 	Game = require('../model/Game.js'),
 	BBPromise = require('bluebird'),
 	resources = require('../engine/resources.js'),
@@ -33,7 +34,7 @@ _.extend(App.prototype, {
 		canvas.addEventListener('click', function (e) {
 			if (that.viewport) { that.viewport.click(e.x, e.y); }
 		});
-		canvas.addEventListener('touch', function (e) {
+		canvas.addEventListener('touchdown', function (e) {
 			if (that.viewport) { that.viewport.click(e.x, e.y); }
 		});
 		window.addEventListener('keydown', function (e) {
@@ -128,7 +129,7 @@ _.extend(App.prototype, {
 	},
 	game: function () {
 		var game = new Game(),
-			viewport = new GameViewport({ game: game });
+			viewport = new MenuViewport({ game: game });
 		this.setViewport(viewport);
 	},
 	setViewport: function (viewport) {
