@@ -1,31 +1,31 @@
-/* jshint node: true */
-'use strict';
+import Entity from './Entity';
+import utils from '../utils';
 
-var _ = require('lodash'),
-	Entity = require('../engine/Entity.js');
-
-var Generator = function () {
-	Entity.apply(this, arguments);
-	this.generatedEntities = [];
-	this.blocks = [];
-};
-_.extend(Generator.prototype, Entity.prototype, {
-	animate: _.throttle(function () {
+export default class Generator extends Entity {
+	constructor(...args) {
+		super(...args);
+		this.generatedEntities = [];
+		this.blocks = [];
+	}
+	animate() {
+		let now = Date.now();
+		if (now < this._lastAnim + 100) { return; } // throttle to 100ms
+		this._lastAnim = now;
 		// check if new block needs to be generated
-		var first = _.first(this.blocks);
+		var first = this.blocks[0];
 		if (!first) {
 			this.generateBlock(0);
 		}
-		var last = _.last(this.blocks);
+		var last = this.blocks[this.blocks.length - 1];
 		/*if (first && first.position.x + first.size.x / 2 + 60 < this.layer.position.x) {
 			this.destroyBlock(first);
 		}*/
 		while (last && last.position.x + last.size.x / 2 < -this.layer.position.x + this.size.x / 2 + 768) {
 			this.generateBlock(last.position.x + last.size.x / 2);
-			last = _.last(this.blocks);
+			last = this.blocks[this.blocks.length - 1];
 		}
-	}, 100),
-	generateBlock: function (x1) {
+	}
+	generateBlock(x1) {
 		var that = this,
 			y1 = that.position.y - that.size.y / 2,
 			block = {
@@ -33,22 +33,20 @@ _.extend(Generator.prototype, Entity.prototype, {
 				size: { x: that.blockSize.x, y: that.position.y }
 			};
 		console.log('block', x1, y1);
-		_.times(Math.round(that.entityCount.min + Math.random() * (that.entityCount.max - that.entityCount.min)), function () {
+		Array(Math.round(that.entityCount.min + Math.random() * (that.entityCount.max - that.entityCount.min))).fill(null).forEach(() => {
 			var x = Math.round(x1 + Math.random() * that.blockSize.x),
 				y = Math.round(y1 + Math.random() * that.size.y);
 			that.generateEntity(x, y);
 		});
 		this.blocks.push(block);
-	},
-	generateEntity: function (x, y) {
+	}
+	generateEntity(x, y) {
 		var entity = new Entity({
-			sprite: _.sample(this.sprites),
+			sprite: utils.randEl(this.sprites),
 			size: this.entitySize,
 			position: { x: x, y: y }
 		});
 		this.layer.add(entity);
 		return entity;
 	}
-});
-
-module.exports = Generator;
+}

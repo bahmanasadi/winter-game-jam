@@ -1,27 +1,19 @@
 {
-  "name": "kobranet",
+  "name": "merry-on-sherry",
   "version": "0.0.0",
   "description": "",
-  "main": "gulpfile.js",
+  "main": "index.js",
   "dependencies": {
-    "bluebird": "^2.3.11",
-    "jquery": "^2.1.1",
-    "lodash": "^2.4.1",
-    "moment": "^2.8.4",
-    "requestanimationframe": "0.0.22"
   },
   "devDependencies": {
-    "browserify": "^6.3.2",
-    "del": "^0.1.3",
-    "express": "^4.10.2",
-    "gulp": "^3.8.10",
-    "vinyl-paths": "^1.0.0",
-    "vinyl-source-stream": "^1.0.0"
+    "rollup": "^0.55.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "gulp build",
-    "dev": "gulp dev"
+    "clean": "mkdir -p ./build && rm -rf ./build/*",
+    "static": "cp -r ./src/static/* ./build/",
+    "rollup": "rollup ./src/js/index.js --o ./build/bundle.js -f umd --name \"merry\" --watch",
+    "build": "npm run clean && npm run static && npm run rollup"
   },
   "author": "",
   "license": "ISC"

@@ -1,34 +1,22 @@
-/* jshint node: true */
-'use strict';
+const cache = {};
 
-
-var BBPromise = require('bluebird');
-
-var resources = {
-	_cache: {},
-	// Load an image url or an array of image urls
-	load: function (url) {
-		if (url instanceof Array) {
-			return BBPromise.all(url.map(resources.load));
-		}
-		console.log('GET', url);
-		return new BBPromise(function (resolve, reject) {
-			var img = new Image();
-			img.onload = function () {
-				resources._cache[url] = img;
-				// console.log('success');
-				resolve(img);
-			};
-			img.onerror = function () {
-				reject('url not found ' + url);
-			};
-			img.src = url;
-		});
-    },
-    get: function (url) {
-    	// console.log('u', url, resources._cache);
-    	return resources._cache[url];
-    }
+// Load an image url
+const load = url => {
+	console.log('GET', url);
+	return new Promise(function (resolve, reject) {
+		var img = new Image();
+		img.onload = function () {
+			cache[url] = img;
+			// console.log('success');
+			resolve(img);
+		};
+		img.onerror = function () {
+			reject('url not found ' + url);
+		};
+		img.src = url;
+	});
 };
 
-module.exports = resources;
+const get = url => cache[url];
+
+export default { load, get };

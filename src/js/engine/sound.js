@@ -1,45 +1,36 @@
-/* jshint node: true */
-'use strict';
+const soundCache = {};
+const musicCache = {};
 
-var _ = require('lodash'),
-	BBPromise = require('bluebird');
-
-// Instances
-// GameUI
-// MenuUI
-// PauseUI
-var sound = {
-	_soundCache: {},
-	_musicCache: {},
-	load: function (id, url, music) {
-		var cache = music ? this._musicCache : this._soundCache;
-		return new BBPromise(function (resolve, reject) {
-			cache[id] = new Audio(url);
-			console.log('GET', url);
-			cache[id].addEventListener('canplaythrough', function () {
-				resolve();
-			});
-			cache[id].onerror = function () {
-				reject();
-			};
+const load = (id, url, music) => {
+	var cache = music ? musicCache : soundCache;
+	return new Promise(function (resolve, reject) {
+		cache[id] = new Audio(url);
+		console.log('GET', url);
+		cache[id].addEventListener('canplaythrough', function () {
+			resolve();
 		});
-	},
-	play: function (id) {
-		console.log('sound', id);
-		this._soundCache[id].play();	
-	},
-	music: function (id) {
-		console.log('music', id);
-		_.each(this._musicCache, function (audio, i) {
-			if (id === i) {
-				console.log('play')
-				audio.play();
-			} else {
-				audio.pause();
-				audio.currentTime = 0;
-			}
-		});
-	}
+		cache[id].onerror = function () {
+			reject();
+		};
+	});
 };
 
-module.exports = sound;
+const play = id => {
+	console.log('sound', id);
+	soundCache[id].play();	
+};
+
+const music = id => {
+	console.log('music', id);
+	Object.entries(musicCache).forEach(([i, audio]) => {
+		if (id === i) {
+			console.log('play');
+			audio.play();
+		} else {
+			audio.pause();
+			audio.currentTime = 0;
+		}
+	});
+};
+
+export default { load, play, music };

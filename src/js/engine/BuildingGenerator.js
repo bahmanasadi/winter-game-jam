@@ -1,87 +1,86 @@
-/* jshint node: true */
-'use strict';
+import utils from '../utils';
+import Entity from './Entity';
+import ImageSprite from './ImageSprite';
+import Generator from './Generator';
 
-var _ = require('lodash'),
-	Entity = require('../engine/Entity.js'),
-	ImageSprite = require('../engine/ImageSprite.js'),
-	Generator = require('../engine/Generator.js');
-
-var BuildingGenerator = function () {
-	Generator.apply(this, arguments);
-	this.generatedEntities = [];
-	this.blocks = [];
-	this.chimneys = [];
-	
-	this.sprites = [
-		{
-			buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-left.png' }),
-			buildingMid: [
-				new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-mid.png' }),
-				new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-mid-window.png' })
-			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-right.png' }),
-			chimney: [
-				new ImageSprite({ url: 'img/sprites/chimney-brick1.png' }),
-				new ImageSprite({ url: 'img/sprites/chimney-brick2.png' })
-			]
-		},
-		{
-			buildingLeft: new ImageSprite({ url: 'img/sprites/building-red-roof-brick-left.png' }),
-			buildingMid: [
-				new ImageSprite({ url: 'img/sprites/building-red-roof-brick-mid.png', }),
-				new ImageSprite({ url: 'img/sprites/building-red-roof-brick-mid-window.png' })
-			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-red-roof-brick-right.png' }),
-			chimney: [
-				new ImageSprite({ url: 'img/sprites/chimney-brick1.png' }),
-				new ImageSprite({ url: 'img/sprites/chimney-brick2.png' })
-			]
-		},
-		{
-			keepShort: true,
-			buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-left.png' }),
-			buildingMid: [
-				new ImageSprite({ url: 'img/sprites/building-thatch-mid.png' }),
-				new ImageSprite({ url: 'img/sprites/building-thatch-mid-window.png' })
-			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-right.png' }),
-			chimney: [
-				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
-			]
-		},
-		{
-			buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-left.png' }),
-			buildingMid: [
-				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid.png' }),
-				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-dormer.png' }),
-				new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-window.png' })
-			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' }),
-			chimney: [
-				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
-			]
-		},
-		{
-			keepShort: true,
-			buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-left.png' }),
-			buildingMid: [
-				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid.png' }),
-				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-window.png' }),
-				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-crossdown.png' }),
-				new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-crossup.png' })
-			],
-			buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-right.png' }),
-			chimney: [
-				new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
-			]
-		}
-	];
-};
-_.extend(BuildingGenerator.prototype, Generator.prototype, {
-	animate: _.throttle(function () {
+export default class BuildingGenerator extends Generator {
+	constructor(...args) {
+		super(...args);
+		this.generatedEntities = [];
+		this.blocks = [];
+		this.chimneys = [];
+		this.sprites = [
+			{
+				buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-left.png' }),
+				buildingMid: [
+					new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-mid.png' }),
+					new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-mid-window.png' })
+				],
+				buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-brick-right.png' }),
+				chimney: [
+					new ImageSprite({ url: 'img/sprites/chimney-brick1.png' }),
+					new ImageSprite({ url: 'img/sprites/chimney-brick2.png' })
+				]
+			},
+			{
+				buildingLeft: new ImageSprite({ url: 'img/sprites/building-red-roof-brick-left.png' }),
+				buildingMid: [
+					new ImageSprite({ url: 'img/sprites/building-red-roof-brick-mid.png', }),
+					new ImageSprite({ url: 'img/sprites/building-red-roof-brick-mid-window.png' })
+				],
+				buildingRight: new ImageSprite({ url: 'img/sprites/building-red-roof-brick-right.png' }),
+				chimney: [
+					new ImageSprite({ url: 'img/sprites/chimney-brick1.png' }),
+					new ImageSprite({ url: 'img/sprites/chimney-brick2.png' })
+				]
+			},
+			{
+				keepShort: true,
+				buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-left.png' }),
+				buildingMid: [
+					new ImageSprite({ url: 'img/sprites/building-thatch-mid.png' }),
+					new ImageSprite({ url: 'img/sprites/building-thatch-mid-window.png' })
+				],
+				buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-right.png' }),
+				chimney: [
+					new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
+				]
+			},
+			{
+				buildingLeft: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-left.png' }),
+				buildingMid: [
+					new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid.png' }),
+					new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-dormer.png' }),
+					new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-mid-window.png' })
+				],
+				buildingRight: new ImageSprite({ url: 'img/sprites/building-blue-roof-plaster-right.png' }),
+				chimney: [
+					new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
+				]
+			},
+			{
+				keepShort: true,
+				buildingLeft: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-left.png' }),
+				buildingMid: [
+					new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid.png' }),
+					new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-window.png' }),
+					new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-crossdown.png' }),
+					new ImageSprite({ url: 'img/sprites/building-thatch-tudor-mid-crossup.png' })
+				],
+				buildingRight: new ImageSprite({ url: 'img/sprites/building-thatch-tudor-right.png' }),
+				chimney: [
+					new ImageSprite({ url: 'img/sprites/chimney-paint1.png' })
+				]
+			}
+		];
+	}
+	animate() {
+		let now = Date.now();
+		if (now < this._lastAnim + 100) { return; } // throttle to 100ms
+		this._lastAnim = now;
 		// check if new block needs to be generated
-		var first = _.first(this.blocks),
-			last = _.last(this.blocks);
+		var first = this.blocks[0],
+			last = this.blocks[this.blocks.length -	1];
 		if (!first) {
 			this.generateBlock(0);
 		}
@@ -93,16 +92,16 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 			//this.player.score++;
 			console.log('score++');
 		}
-	}, 100),
+	}
 	// A block consists of a left side, a number of mid parts and a right side
-	generateBlock: function (x) {
+	generateBlock(x) {
 		console.log('x', x);
 		x = Math.round(x + 16 + Math.random() * 32); // create a gap
 		var that = this,
 			buildingWidth = 64,
 			buildingHeight = 80,
 			entities = [],
-			sprites = _.sample(_.values(this.sprites)),
+			sprites = utils.randEl(Object.values(this.sprites)),
 			gameStart = x < 128,
 
 			buildingCountMin = gameStart ? 4 : 2,
@@ -120,8 +119,8 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 		console.log('generate', block.position.x, block.position.y, block.size.x, block.size.y);
 
 		var chimneyProbability = 0.3;
-		_.times(buildingCount, function (i) {
-			var midIndex = Math.random() < 0.4 ? 0 : _.random(0, sprites.buildingMid.length - 1),
+		Array(buildingCount).fill(null).map((u, i) => {
+			var midIndex = Math.random() < 0.4 ? 0 : utils.random(0, sprites.buildingMid.length - 1),
 				sprite = i === 0 ? sprites.buildingLeft :
 				i === buildingCount - 1 ? sprites.buildingRight :
 				sprites.buildingMid[midIndex];
@@ -136,13 +135,13 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 			var hasChimney = !gameStart && i > 0 && i < buildingCount - 1 && midIndex === 0 && Math.random() < chimneyProbability;
 
 			if (hasChimney) {
-				var pos = { x: x + i * buildingWidth, y: y + 30 + _.random(0, 10) };
+				var pos = { x: x + i * buildingWidth, y: y + 30 + utils.random(0, 10) };
 				var chimneyFace = new Entity({
 					sprite: that.chimneyFaceSprites.sleep,
 					position: pos
 				});
 				var chimney = new Entity({
-					sprite: _.sample(sprites.chimney),
+					sprite: utils.randEl(sprites.chimney),
 					position: pos,
 					face: chimneyFace
 				});
@@ -155,16 +154,14 @@ _.extend(BuildingGenerator.prototype, Generator.prototype, {
 			}
 		});
 
-		entities.forEach(function (entity) {
-			that.layer.add(_.extend(entity, {
+		entities.forEach(entity => {
+			that.layer.add(Object.assign(entity, {
 				velocity: that.velocity,
 				accelaration: that.accelaration
 			}));
 		});
-	},
-	destroyBlock: function (block) {
+	}
+	destroyBlock() {
 		// todo
 	}
-});
-
-module.exports = BuildingGenerator;
+}

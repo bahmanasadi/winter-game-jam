@@ -1,18 +1,8 @@
-/* jshint node: true */
-'use strict';
+import Sprite from './Sprite';
 
-var _ = require('lodash'),
-	Sprite = require('../engine/Sprite.js');
-
-var RectangleSprite = function () {
-	Sprite.apply(this, arguments);
-};
-
-_.extend(RectangleSprite.prototype, Sprite.prototype, {
-	render: function (context, pos) {
+export default class RectangleSprite extends Sprite {
+	render(context, pos) {
 		context.fillStyle = this.fill;
 		context.fillRect(pos.x, pos.y, pos.width, pos.height);
 	}
-});
-
-module.exports = RectangleSprite;
+}

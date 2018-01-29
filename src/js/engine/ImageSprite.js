@@ -1,30 +1,22 @@
-/* jshint node: true */
-'use strict';
+import Sprite from './Sprite';
+import resources from './resources';
 
-var _ = require('lodash'),
-	Sprite = require('../engine/Sprite.js'),
-	resources = require('../engine/resources.js');
-
-var ImageSprite = function () {
-	Sprite.apply(this, arguments);
-	var that = this;
-	this.image = resources.get(this.url);
-	if (this.animate) {
-		this.frameCount = Math.floor(this.image.width / this.animate.slice.x);
-		this.currentFrame = 0;
-		setInterval(function () {
-			that.currentFrame++;
-			if (that.currentFrame === that.frameCount) {
-				that.currentFrame = 0;
-			}
-		}, (1 / this.animate.speed) * 1000);
+export default class ImageSprite extends Sprite {
+	constructor(...args) {
+		super(...args);
+		this.image = resources.get(this.url);
+		if (this.animate) {
+			this.frameCount = Math.floor(this.image.width / this.animate.slice.x);
+			this.currentFrame = 0;
+			setInterval(() => {
+				this.currentFrame++;
+				if (this.currentFrame === this.frameCount) {
+					this.currentFrame = 0;
+				}
+			}, 1 / this.animate.speed * 1000);
+		}
 	}
-};
-
-_.extend(ImageSprite.prototype, Sprite.prototype, {
-	url: undefined,
-	animation : undefined,
-	render: function (context, pos) {
+	render(context, pos) {
 		context.save();
 		context.translate(pos.x, pos.y);
 		if (this.rotation) {
@@ -39,6 +31,4 @@ _.extend(ImageSprite.prototype, Sprite.prototype, {
 		}
 		context.restore();
 	}
-});
-
-module.exports = ImageSprite;
+}

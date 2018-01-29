@@ -1,19 +1,13 @@
-/* jshint node: true */
-'use strict';
+import Sprite from './Sprite.js';
+import resources from './resources.js';
 
-var _ = require('lodash'),
-	Sprite = require('../engine/Sprite.js'),
-	resources = require('../engine/resources.js');
-
-var TextSprite = function () {
-	Sprite.apply(this, arguments);
-	this.image = resources.get(this.url);
-};
-
-_.extend(TextSprite.prototype, Sprite.prototype, {
-	text: '',
-	render: function (context, pos) {
-		context.font = ((this.fontSize || 8) * context.scaleFactor) + 'px "Press Start 2P"';
+export default class TextSprite extends Sprite {
+	constructor(...args) {
+		super(...args);
+		this.image = resources.get(this.url);
+	}
+	render(context, pos) {
+		context.font = (this.fontSize || 8) * context.scaleFactor + 'px "Press Start 2P"';
 		context.textAlign = 'center';
 		if (this.shadow) {
 			context.fillStyle = 'black';
@@ -22,6 +16,4 @@ _.extend(TextSprite.prototype, Sprite.prototype, {
 		context.fillStyle = this.fill;
 		context.fillText(this.text, pos.x, pos.y);
 	}
-});
-
-module.exports = TextSprite;
+}

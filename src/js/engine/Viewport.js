@@ -1,29 +1,16 @@
-/* jshint node: true */
-'use strict';
-
-var _ = require('lodash');
-
-// Instances
-// GameUI
-// MenuUI
-// PauseUI
-var Viewport = function (attributes) {
-	_.extend(this, attributes);
-	this.layers = {};
-	this.pause = false;
-	this.gameover = false;
-};
-
-_.extend(Viewport.prototype, {
-	render: function (time, context) {
-		var that = this;
-		_.values(this.layers).forEach(function (layer) { 
-			layer.pause = that.pause;
-			layer.gameover = that.gameover;
+export default class Viewport {
+	constructor(attributes) {
+		Object.assign(this, attributes);
+		this.layers = {};
+		this.pause = false;
+		this.gameover = false;
+	}
+	render(time, context) {
+		Object.values(this.layers).forEach(layer => { 
+			layer.pause = this.pause;
+			layer.gameover = this.gameover;
 			layer.render(time, context); 
 		});
-	},
-	click: function () {}
-});
-
-module.exports = Viewport;
+	}
+	click() {}
+}
