@@ -13,14 +13,8 @@ export default class Layer extends Entity {
 	}
 	render(time, context) {
 		this.entities.forEach(entity => { 
-			// Overwrite outer variable time
-			if (entity.type === Entity.types.player && this.gameover) {
-
-			} else if (this.pause) {
+			if (this.gameover) {
 				time = 0;
-			} else if (this.gameover) {
-				time = 0;
-			} else {
 			}
 			entity.render(time, context); 
 		});

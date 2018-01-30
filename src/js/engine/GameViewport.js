@@ -12,25 +12,19 @@ import CloudGenerator from './CloudGenerator';
 import sound from './sound';
 
 const labels = ['Merry', 'Tipsy', 'Woozy', 'Sloshed', 'Sozzled'];
+const baseSpeed = 120;
+const baseAcceleration = 1.1;
 
 export default class GameViewport extends Viewport {
 	constructor(...args) {
 		super(...args);
-		console.log(this.game.player);
-		var that = this;
+		window.game = this;
 
 		this.cherry = 0;
 		this.level = 1;
 		this.drunkenness = 0;
-		window.game = this;
 
-		setInterval(() => {
-			if (that.drunkenness < that.level - 1) {
-				that.drunkenness += 0.03;
-			}
-		}, 300);
-
-		var sprites = this.sprites = {
+		this.sprites = {
 			sky: new RectangleSprite({
 				fill: '#0B4B97'
 			}),
@@ -99,6 +93,12 @@ export default class GameViewport extends Viewport {
 				},
 			},
 			
+			start: new TextSprite({
+				text: 'Press space to start',
+				fill: 'white',
+				shadow: true
+			}),
+
 			timeLeft: new TextSprite({
 				text: '01:00',
 				fill: 'white',
@@ -163,34 +163,6 @@ export default class GameViewport extends Viewport {
 			//tumble: new Sprite({})
 		};
 
-		// Game Timer
-		var startTime = Date.now();
-		var gameTimer = () => {
-			if (that.pause || that.gameover) {
-				clearInterval(timeIntervalID);
-			}
-			let milliseconds = Date.now() - startTime,
-				seconds = Math.floor(milliseconds / 1000),
-				minutes = Math.floor(seconds / 60);
-
-			milliseconds -= seconds * 1000;
-			seconds -= minutes * 60;
-
-			sprites.timeLeft.text = String(minutes).padStart(2, '0') + ':' +
-									String(seconds).padStart(2, '0') + '.' +
-									String(Math.floor(milliseconds / 100));
-		};
-		var timeIntervalID;
-
-		this.resumeGameTime = () => {
-			timeIntervalID = setInterval(gameTimer, 100);
-		};
-		this.resumeGameTime();
-
-		// Speeds and layers
-		var baseSpeed = 100,
-			baseAcceleration = 1;
-
 		this.layers.sky = new Layer({
 			position: { x: 0, y: 0 }
 		}); // sky
@@ -219,61 +191,58 @@ export default class GameViewport extends Viewport {
 		}); // ui
 
 		this.entities = {
-			player: new Entity({
-				sprite: sprites.run,
-				position: { x: 100, y: 120 },
-				size: { x: 18, y: 32 },
-				acceleration: { x: baseAcceleration, y: -400 },
-				velocity: { x: baseSpeed, y: 0 },
-				type: Entity.types.player
-			}),
 			sky: new Entity({
-				sprite: sprites.sky,
+				sprite: this.sprites.sky,
 				position: { x: 128, y: 80 },
 				size: { x: 256, y: 160 }
 			}),
 			moon: new Entity({
-				sprite: sprites.moon,
+				sprite: this.sprites.moon,
 				position: { x: 220, y: 140 },
 				size: { x: 79, y: 78 }
 			}),
 			timeLeft: new Entity({
-				sprite: sprites.timeLeft,
+				sprite: this.sprites.timeLeft,
 				position: { x: 128, y: 140 },
 				size: { x: 0, y: 0 }
 			}),
+			start: new Entity({
+				sprite: this.sprites.start,
+				position: { x: 128, y: 30 },
+				size: { x: 0, y: 0 }
+			}),
 			gameover: new Entity({
-				sprite: sprites.gameover,
+				sprite: this.sprites.gameover,
 				position: { x: 128, y: 120 },
 				size: { x: 0, y: 0 }
 			}),
 			f5: new Entity({
-				sprite: sprites.f5,
+				sprite: this.sprites.f5,
 				position: { x: 128, y: 100 },
 				size: { x: 0, y: 0 }
 			}),
 			levelNotice: new Entity({
-				sprite: sprites.levelNotice,
+				sprite: this.sprites.levelNotice,
 				position: { x: 128, y: 120 },
 				size: { x: 0, y: 0 }
 			}),
 			score: new Entity({
-				sprite: sprites.score,
+				sprite: this.sprites.score,
 				position: { x: 128, y: 60 },
 				size: { x: 0, y: 0 }
 			}),
 			paused: new Entity({
-				sprite: sprites.paused,
+				sprite: this.sprites.paused,
 				position: { x: 128, y: 80 },
 				size: { x: 0, y: 0 }
 			}),
 			pauseButton: new Entity({
-				sprite: sprites.pauseButton,
+				sprite: this.sprites.pauseButton,
 				position: { x: 40, y: 140 },
 				size: { x: 0, y: 0 }
 			}),
 			bottle: new Entity({
-				sprite: sprites.bottle[0],
+				sprite: this.sprites.bottle[0],
 				position: { x: 20, y: 80 }
 			}),
 			bottleLabel: new Entity({
@@ -294,81 +263,133 @@ export default class GameViewport extends Viewport {
 		};
 		
 		this.layers.sky.add(this.entities.sky);
-		that.layers.sky.add(this.entities.moon);
-		this.layers.fg.add(this.entities.player);
-		that.layers.ui.add(this.entities.timeLeft);
-		//that.layers.ui.add(this.entities.pauseButton);
-		that.layers.ui.add(this.entities.bottle);
-		that.layers.ui.add(this.entities.bottleLabel);
-		that.layers.ui.add(this.entities.bottleLabel1);
-		that.layers.ui.add(this.entities.bottleLabel2);
-		that.layers.ui.add(this.entities.levelNotice);
+		this.layers.sky.add(this.entities.moon);
 
 		this.buildingGenerator = new BuildingGenerator({
 			size: { x: 256, y: 160 },
-			chimneyFaceSprites: sprites.chimneyFace
+			chimneyFaceSprites: this.sprites.chimneyFace
 		});
-		that.layers.fg.add(this.buildingGenerator);
+		this.layers.fg.add(this.buildingGenerator);
 
 		this.starGenerator = new Generator({
 			size: { x: 256, y: 160 },
 			position: { x: 128, y: 80 },
-			sprites: [sprites.star1, sprites.star2, sprites.star3, sprites.star4],
+			sprites: [this.sprites.star1, this.sprites.star2, this.sprites.star3, this.sprites.star4],
 			entitySize: { x: 1, y: 1 },
 			blockSize: { x: 64 },
 			entityCount: { min: 1, max: 6 }
 		});
-		that.layers.sky.add(this.starGenerator);
+		this.layers.sky.add(this.starGenerator);
 
 		this.cloudGenerator1 = new CloudGenerator({
 			size: { x: 256, y: 100 },
 			position: { x: 128, y: 130 },
-			sprites: sprites.cloud.large,
-			faceSprites: sprites.cloudFace.large,
+			sprites: this.sprites.cloud.large,
+			faceSprites: this.sprites.cloudFace.large,
 			blockSize: { x: 128 },
 			entityCount: { min: 0, max: 2 }
 		});
-		that.layers.bgFar.add(this.cloudGenerator1);
+		this.layers.bgFar.add(this.cloudGenerator1);
 
 		this.cloudGenerator2 = new CloudGenerator({
 			size: { x: 256, y: 100 },
 			position: { x: 128, y: 130 },
-			sprites: sprites.cloud.small,
-			faceSprites: sprites.cloudFace.small,
+			sprites: this.sprites.cloud.small,
+			faceSprites: this.sprites.cloudFace.small,
 			blockSize: { x: 128 },
 			entityCount: { min: 0, max: 2 }
 		});
-		that.layers.bgClose.add(this.cloudGenerator2);
+		this.layers.bgClose.add(this.cloudGenerator2);
 
-		sound.music('game');
+		this.entities.player = new Entity({
+			sprite: this.sprites.run,
+			position: { x: 100, y: -10 },
+			size: { x: 18, y: 32 },
+			acceleration: { x: baseAcceleration, y: -400 },
+			velocity: { x: baseSpeed, y: 0 }
+		});
+		this.layers.fg.add(this.entities.player);
+
+		let on;
+		setInterval(() => {
+			if (!this.started) {
+				on = !on;
+				if (on) {
+					this.layers.ui.add(this.entities.start);
+				} else {
+					this.layers.ui.remove(this.entities.start);
+				}
+			}
+			if (this.gameover) {
+				on = !on;
+				if (on) {
+					this.layers.ui.add(this.entities.f5);
+				} else {
+					this.layers.ui.remove(this.entities.f5);
+				}
+			}
+		}, 500);
+
+		this.menu();
 	}
-	click(x, y) {
-		if (x>0 && x<75 && y>0 && y<40) {
-			if (!this.pause) {
-				this.layers[4].add(this.entities.paused);
-			} else {
-				this.layers[4].remove(this.entities.paused);
-				this.resumeGameTime();
+	menu() {
+		sound.music('menu');
+	}
+	start() {
+		var startTime = Date.now();
+		var timeIntervalID = setInterval(() => {
+			if (this.pause || this.gameover) {
+				clearInterval(timeIntervalID);
 			}
-			this.pause = !this.pause;
+			let milliseconds = Date.now() - startTime,
+				seconds = Math.floor(milliseconds / 1000),
+				minutes = Math.floor(seconds / 60);
+
+			milliseconds -= seconds * 1000;
+			seconds -= minutes * 60;
+
+			this.sprites.timeLeft.text = String(minutes).padStart(2, '0') + ':' +
+									String(seconds).padStart(2, '0') + '.' +
+									String(Math.floor(milliseconds / 100));
+
+			if (this.drunkenness < this.level - 1) {
+				this.drunkenness += 0.01;
+			}
+		}, 100);
+
+		this.entities.player.position.y = 120;
+		this.entities.player.velocity.y = 0;
+		
+		this.layers.ui.add(this.entities.timeLeft);
+		this.layers.ui.add(this.entities.bottle);
+		this.layers.ui.add(this.entities.bottleLabel);
+		this.layers.ui.add(this.entities.bottleLabel1);
+		this.layers.ui.add(this.entities.bottleLabel2);
+		this.layers.ui.add(this.entities.levelNotice);
+		this.layers.ui.remove(this.entities.start);
+		sound.music('game');
+		this.started = true;
+	}
+	jump() {
+		// Jump only if velocity is less than 10 (ie. not already in a jump motion).
+		// Volecity is changing constantly but is less than 10
+		if (Math.abs(this.entities.player.velocity.y) > 10) { return; }
+		this.entities.player.velocity.y = 150;
+		this.entities.player.sprite = this.sprites.jump;
+		sound.play('jump');
+	}
+	click() {
+		if (!this.started) {
+			this.start();
 		} else {
-			// Jump only if velocity is less than 10 (not in a jump motion).
-			// Volecity is changing constantly but is less than 10
-			if (Math.abs(this.entities.player.velocity.y) < 10) {
-				console.log('jump!', x, y);
-				this.entities.player.velocity.y = 150;
-				this.entities.player.sprite = this.sprites.jump;
-				sound.play('jump');
-			}
+			this.jump();
 		}
 	}
 	render(...args) {
-		var that = this;
 		super.render(...args);
-		if (this.gameover) { return; }
+		if (this.gameover || !this.started) { return; }
 
 		var collidedEntity = utils.detectCollision(this.entities.player, this.layers.fg.entities);
-
 		if (collidedEntity) {
 			var playerY = Math.ceil(this.entities.player.position.y);
 			var collidedEntityY = collidedEntity.position.y + collidedEntity.size.y / 2.0 + this.entities.player.size.y / 2.0 ;
@@ -379,26 +400,26 @@ export default class GameViewport extends Viewport {
 				this.gameover = true;
 				sound.music('gameover');
 				this.layers.ui.add(this.entities.gameover);
-				this.layers.ui.add(this.entities.f5);
+				//this.layers.ui.add(this.entities.f5);
 				this.buildingGenerator.chimneys.forEach(chimney => {
 					chimney.face.sprite = utils.randEl([
-						that.sprites.chimneyFace.ouchOoo,
-						that.sprites.chimneyFace.ouchSad,
-						that.sprites.chimneyFace.ouchShock
+						this.sprites.chimneyFace.ouchOoo,
+						this.sprites.chimneyFace.ouchSad,
+						this.sprites.chimneyFace.ouchShock
 					]);
 				});
 				this.cloudGenerator1.faces.forEach(face => {
 					face.sprite = utils.randEl([
-						that.sprites.cloudFace.large.ouchOoo, 
-						that.sprites.cloudFace.large.ouchSad,
-						that.sprites.cloudFace.large.ouchShock
+						this.sprites.cloudFace.large.ouchOoo, 
+						this.sprites.cloudFace.large.ouchSad,
+						this.sprites.cloudFace.large.ouchShock
 					]);
 				});
 				this.cloudGenerator2.faces.forEach(face => {
 					face.sprite = utils.randEl([
-						that.sprites.cloudFace.small.ouchOoo, 
-						that.sprites.cloudFace.small.ouchSad,
-						that.sprites.cloudFace.small.ouchShock
+						this.sprites.cloudFace.small.ouchOoo, 
+						this.sprites.cloudFace.small.ouchSad,
+						this.sprites.cloudFace.small.ouchShock
 					]);
 				});
 				//this.entities.score.sprite.text = 'Score: ' + (this.game.player.score-1);
@@ -429,7 +450,7 @@ export default class GameViewport extends Viewport {
 			this.layers.fg2.add(present);
 			chimneyJumped.face.sprite = this.sprites.chimneyFace.surprised;
 			setTimeout(() => {
-				chimneyJumped.face.sprite = utils.randEl([ that.sprites.chimneyFace.happyPleased, that.sprites.chimneyFace.happySmiley ]);
+				chimneyJumped.face.sprite = utils.randEl([ this.sprites.chimneyFace.happyPleased, this.sprites.chimneyFace.happySmiley ]);
 			}, 400);
 			
 			if (this.level === 1) {
@@ -446,9 +467,9 @@ export default class GameViewport extends Viewport {
 				this.entities.levelNotice.sprite.text = labels[Math.min(this.level, 4) - 1] + new Array(this.level).join('!');
 				this.entities.levelNotice.sprite.fill = '#FFFFFF';
 				var glug = () => {
-					that.cherry--;
-					that.entities.bottle.sprite = that.sprites.bottle[that.cherry];
-					if (that.cherry > 0) {
+					this.cherry--;
+					this.entities.bottle.sprite = this.sprites.bottle[this.cherry];
+					if (this.cherry > 0) {
 						setTimeout(glug, 100);
 					}
 				};
@@ -456,16 +477,16 @@ export default class GameViewport extends Viewport {
 				var skyColor = this.entities.sky.sprite.fill;
 				this.entities.sky.sprite.fill = '#ccc';
 				setTimeout(() => {
-					that.entities.sky.sprite.fill = skyColor;
+					this.entities.sky.sprite.fill = skyColor;
 				}, 100);
 				setTimeout(() => {
-					that.entities.levelNotice.sprite.fill = '#4277B7';
+					this.entities.levelNotice.sprite.fill = '#4277B7';
 				}, 2500);
 				setTimeout(() => {
-					that.entities.levelNotice.sprite.fill = '#1F61B0';
+					this.entities.levelNotice.sprite.fill = '#1F61B0';
 				}, 2750);
 				setTimeout(() => {
-					that.entities.levelNotice.sprite.text = '';
+					this.entities.levelNotice.sprite.text = '';
 				}, 3000);
 			}
 			this.entities.bottle.sprite = this.sprites.bottle[this.cherry];

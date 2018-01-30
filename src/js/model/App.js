@@ -91,15 +91,12 @@ export default class App {
 		this.context.scaleFactor = scaleFactor;
 		this.context.marginTop = (canvas.height - scaleFactor * this.height) / 2;
 		
-		canvas.addEventListener('click', e => {
-			if (this.viewport) { this.viewport.click(e.x, e.y); }
-		});
-		canvas.addEventListener('touchdown', e => {
-			if (this.viewport) { this.viewport.click(e.x, e.y); }
-		});
-		window.addEventListener('keydown', () => {
-			if (this.viewport) { this.viewport.click(0, 0); }
-		});
+		let f = () => {
+			if (this.viewport) { this.viewport.click(); }
+		};
+		canvas.addEventListener('click', f);
+		canvas.addEventListener('touchdown', f);
+		window.addEventListener('keydown', f);
 
 		return Promise.all([
 			...resourcelist.map(url => resources.load(url)),

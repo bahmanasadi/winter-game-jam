@@ -97,8 +97,7 @@ export default class BuildingGenerator extends Generator {
 	generateBlock(x) {
 		console.log('x', x);
 		x = Math.round(x + 16 + Math.random() * 32); // create a gap
-		var that = this,
-			buildingWidth = 64,
+		var buildingWidth = 64,
 			buildingHeight = 80,
 			entities = [],
 			sprites = utils.randEl(Object.values(this.sprites)),
@@ -118,7 +117,7 @@ export default class BuildingGenerator extends Generator {
 
 		console.log('generate', block.position.x, block.position.y, block.size.x, block.size.y);
 
-		var chimneyProbability = 0.3;
+		var chimneyProbability = 1;
 		Array(buildingCount).fill(null).map((u, i) => {
 			var midIndex = Math.random() < 0.4 ? 0 : utils.random(0, sprites.buildingMid.length - 1),
 				sprite = i === 0 ? sprites.buildingLeft :
@@ -132,12 +131,12 @@ export default class BuildingGenerator extends Generator {
 			});
 			entities.push(section);
 
-			var hasChimney = !gameStart && i > 0 && i < buildingCount - 1 && midIndex === 0 && Math.random() < chimneyProbability;
+			var hasChimney = midIndex === 0 && Math.random() < chimneyProbability;
 
 			if (hasChimney) {
-				var pos = { x: x + i * buildingWidth, y: y + 30 + utils.random(0, 10) };
+				var pos = { x: x + i * buildingWidth, y: y + 26 + (Math.random() > 0.2 ? utils.random(0, 5) : utils.random(5, 16)) };
 				var chimneyFace = new Entity({
-					sprite: that.chimneyFaceSprites.sleep,
+					sprite: this.chimneyFaceSprites.sleep,
 					position: pos
 				});
 				var chimney = new Entity({
@@ -147,7 +146,7 @@ export default class BuildingGenerator extends Generator {
 				});
 				entities.push(chimney);
 				entities.push(chimneyFace);
-				that.chimneys.push(chimney);
+				this.chimneys.push(chimney);
 				chimneyProbability = -0.2;
 			} else {
 				chimneyProbability += 0.45;
@@ -155,9 +154,9 @@ export default class BuildingGenerator extends Generator {
 		});
 
 		entities.forEach(entity => {
-			that.layer.add(Object.assign(entity, {
-				velocity: that.velocity,
-				accelaration: that.accelaration
+			this.layer.add(Object.assign(entity, {
+				velocity: this.velocity,
+				accelaration: this.accelaration
 			}));
 		});
 	}
