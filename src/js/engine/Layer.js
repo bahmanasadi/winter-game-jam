@@ -12,12 +12,15 @@ export default class Layer extends Entity {
 		this.gameover = false;
 	}
 	render(time, context) {
-		this.entities.forEach(entity => { 
+		let l = this.entities.length,
+			i, entity;
+		for (i = 0; i < l; i++) {
+			entity = this.entities[i];
 			if (this.gameover) {
 				time = 0;
 			}
 			entity.render(time, context); 
-		});
+		}
 		this.animate(time);
 	}
 	add(entity) {

@@ -1,18 +1,19 @@
 {
   "name": "merry-on-sherry",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
+    "http-server": "^0.11.1",
     "rollup": "^0.55.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "mkdir -p ./build && rm -rf ./build/*",
     "static": "cp -r ./src/static/* ./build/",
     "rollup": "rollup ./src/js/index.js --o ./build/bundle.js -f umd --name \"merry\" --watch",
-    "build": "npm run clean && npm run static && npm run rollup"
+    "build": "http-server ./build & npm run clean && npm run static && npm run rollup"
   },
   "author": "",
   "license": "ISC"

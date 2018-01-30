@@ -10,17 +10,17 @@ Created for the Great British Winter Game Jam by Team Universally Challenged: To
 Install
 ---
 
-You will require node.js and npm. [Download this](http://nodejs.org/) and install.
+You will require node.js and npm. [Download it](http://nodejs.org/) and install.
 
 Download the [latest version](https://github.com/time-traveling-pineapple/winter-game-jam/archive/master.zip) of Merry on Sherry.
 
 In a terminal, run the following
 ```
 npm install
-npm run dev
+npm run build
 ```
 
-Merry on Sherry will now be available at http://localhost:8080/.
+Merry on Sherry will now be available at [http://localhost:8080/](http://localhost:8080/).
 
 Credits
 ---

@@ -128,12 +128,14 @@ export default class App {
 	render() {
 		var time = Date.now(),
 			timeDiff = (time - this._lastTime) / 1000;
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		if (this.viewport) { this.viewport.render(timeDiff, this.context); }
-		this.context.fillStyle = 'black';
-		this.context.fillRect(0, 0, this.canvas.width, this.context.marginTop + 1);
-		this.context.fillRect(0, this.canvas.height - this.context.marginTop - 1, this.canvas.width, this.context.marginTop + 2);
-		this._lastTime = time;
+		if (timeDiff > 0.01) { // framerate limiter
+			this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			if (this.viewport) { this.viewport.render(timeDiff, this.context); }
+			this.context.fillStyle = 'black';
+			this.context.fillRect(0, 0, this.canvas.width, this.context.marginTop + 1);
+			this.context.fillRect(0, this.canvas.height - this.context.marginTop - 1, this.canvas.width, this.context.marginTop + 2);
+			this._lastTime = time;
+		}
 		window.requestAnimationFrame(() => this.render());
 	}
 }

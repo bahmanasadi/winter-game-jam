@@ -6,11 +6,15 @@ export default class Viewport {
 		this.gameover = false;
 	}
 	render(time, context) {
-		Object.values(this.layers).forEach(layer => { 
+		let layers = Object.values(this.layers),
+			l = layers.length,
+			i, layer;
+		for (i = 0; i < l; i++) {
+			layer = layers[i];
 			layer.pause = this.pause;
 			layer.gameover = this.gameover;
 			layer.render(time, context); 
-		});
+		}
 	}
 	click() {}
 }
